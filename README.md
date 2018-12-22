@@ -1,14 +1,17 @@
 # WechatVendorPlatformProxy
-Short description and motivation.
+微信商户平台（微信支付）代理Engine
 
 ## Usage
-How to use my plugin.
+
+* 商户平台
+
+    Mount engine in host rails routes: mount WechatVendorPlatformProxy::Engine, at: "/wxpay"
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wechat_vendor_platform_proxy'
+gem 'wechat_vendor_platform_proxy', git: "git@github.com:vcooline/wechat_vendor_platform_proxy.git", branch: "master"
 ```
 
 And then execute:
