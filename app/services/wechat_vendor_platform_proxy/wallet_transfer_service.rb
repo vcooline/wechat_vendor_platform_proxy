@@ -35,7 +35,7 @@ module WechatVendorPlatformProxy
       call_transfer_api(request_params)
     end
 
-    # transfer_params example:
+    # query_params example:
     #   {
     #     mch_id: "",
     #     appid: "",
