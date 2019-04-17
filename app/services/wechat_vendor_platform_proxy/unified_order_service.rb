@@ -7,6 +7,12 @@ module WechatVendorPlatformProxy
         new(get_vendor(order_params[:mch_id])).perform(order_params)
       end
 
+      def verify_notification_sign(notification_params={})
+        notification_sign = notification_params.delete("sign")
+        re_sign = Digest::MD5.hexdigest(notification_params.sort.map{ |param| param.join("=") }.join("&") + "&key=" + get_vendor(notification_params["sub_mch_id"] || notification_params["mch_id"]).sign_key).upcase
+        ActiveSupport::SecurityUtils.secure_compare(notification_sign, re_sign)
+      end
+
       private
         def get_vendor(mch_id)
           ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id: mch_id)
