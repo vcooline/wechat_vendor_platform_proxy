@@ -21,7 +21,7 @@ module WechatVendorPlatformProxy
     #   {
     #     appid: "",
     #     mch_id: "",
-    #     partner_trade_no: "",
+    #     out_trade_no: "",
     #     body: "",
     #     notify_url: "",
     #     trade_type: "",
