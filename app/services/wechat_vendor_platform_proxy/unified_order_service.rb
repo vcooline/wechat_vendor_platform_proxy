@@ -41,8 +41,8 @@ module WechatVendorPlatformProxy
 
     private
       def sign_params(p)
-        # Digest::MD5.hexdigest(p.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{key}").upcase
-        Digest::MD5.hexdigest("#{URI.unescape(p.to_query)}&key=#{vendor.sign_key}").upcase
+        Digest::MD5.hexdigest(p.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{key}").upcase
+        # Digest::MD5.hexdigest("#{URI.unescape(p.to_query)}&key=#{vendor.sign_key}").upcase
       end
 
       def generate_order_params(base_params)
