@@ -73,7 +73,7 @@ module WechatVendorPlatformProxy
       def call_transfer_api(request_params)
         Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call transfer api reqt: #{request_params.to_json}"
         resp = ssl_api_client.post "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers", request_params.to_xml(dasherize: false)
-        Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call transfer api resp(#{resp.status}):\n#{resp.body.squish}"
+        Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call transfer api resp(#{resp.status}): #{resp.body.squish}"
         Hash.from_xml(resp.body)["xml"]
       end
 
@@ -86,7 +86,7 @@ module WechatVendorPlatformProxy
       def call_query_api(request_params)
         Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call query api reqt: #{request_params.to_json}"
         resp = ssl_api_client.post "https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo", request_params.to_xml(dasherize: false)
-        Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call query api resp(#{resp.status}):\n#{resp.body.squish}"
+        Rails.logger.info "WechatVendorPlatformProxy WalletTransferService call query api resp(#{resp.status}): #{resp.body.squish}"
         Hash.from_xml(resp.body)["xml"]
       end
   end
