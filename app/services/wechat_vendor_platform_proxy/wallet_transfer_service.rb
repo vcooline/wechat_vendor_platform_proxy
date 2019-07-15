@@ -1,5 +1,10 @@
 module WechatVendorPlatformProxy
   class WalletTransferService
+
+    %w(NO_AUTH AMOUNT_LIMIT FREQ_LIMIT MONEY_LIMIT SENDNUM_LIMIT V2_ACCOUNT_SIMPLE_BAN OPENID_ERROR NOTENOUGH NAME_MISMATCH SEND_FAILED SYSTEMERROR).each do |err_code|
+      const_set err_code.to_sym, StandardError.new
+    end
+
     attr_reader :vendor
 
     class << self
