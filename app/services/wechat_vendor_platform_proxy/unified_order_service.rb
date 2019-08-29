@@ -4,7 +4,7 @@ module WechatVendorPlatformProxy
 
     class << self
       def perform(order_params={})
-        new(get_vendor(order_params[:mch_id])).perform(order_params)
+        new(get_vendor(order_params[:sub_mch_id].presence || order_params[:mch_id])).perform(order_params)
       end
 
       def verify_notification_sign(notification_params={})
