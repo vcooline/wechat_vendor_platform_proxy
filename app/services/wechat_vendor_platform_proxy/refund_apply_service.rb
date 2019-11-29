@@ -38,6 +38,12 @@ module WechatVendorPlatformProxy
     end
 
     private
+      def ssl_api_client
+        ssl_client_key = OpenSSL::PKey::RSA.new vendor.api_client_key
+        ssl_client_cert = OpenSSL::X509::Certificate.new vendor.api_client_cert
+        Faraday.new(ssl: {client_key: ssl_client_key, client_cert: ssl_client_cert}, headers: {'Content-Type' => 'application/xml'})
+      end
+
       def sign_params(p)
         Digest::MD5.hexdigest(p.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}").upcase
       end
@@ -50,7 +56,7 @@ module WechatVendorPlatformProxy
 
       def call_refund_api(request_params)
         Rails.logger.info "WechatVendorPlatformProxy RefundApplyService call refund api reqt: #{request_params.to_json}"
-        resp = Faraday.post "https://api.mch.weixin.qq.com/secapi/pay/refund", request_params.to_xml(dasherize: false)
+        resp = ssl_api_client.post "https://api.mch.weixin.qq.com/secapi/pay/refund", request_params.to_xml(dasherize: false)
         Rails.logger.info "WechatVendorPlatformProxy RefundApplyService call refund api resp(#{resp.status}): #{resp.body.squish}"
         Hash.from_xml(resp.body)["xml"]
       end
