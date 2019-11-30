@@ -29,6 +29,15 @@ module WechatVendorPlatformProxy
         .tap{ |c| c.key = Digest::MD5.hexdigest(vendor.sign_key) }
         .then{ |c| c.update(Base64.decode64(encrypted_content)) << c.final }
         .strip
+        .then { |content| content[0..content.rindex('>')] }
     end
+
+    private
+      # def decode_padding(plain)
+      #   pad = plain.bytes[-1]
+      #   # no padding
+      #   pad = 0 if pad < 1 || pad > 32
+      #   plain[0...(plain.length - pad)]
+      # end
   end
 end
