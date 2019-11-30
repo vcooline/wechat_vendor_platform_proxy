@@ -14,7 +14,7 @@ module WechatVendorPlatformProxy
         .decrypt
         .tap{ |c| c.padding = 0 }
         .tap{ |c| c.key = Digest::MD5.hexdigest(vendor.sign_key) }
-        .then{ |c| c.update(Base64.decode64(result["req_info"])) << c.final }
+        .then{ |c| c.update(Base64.decode64(encrypted_content)) << c.final }
         .strip
     end
   end
