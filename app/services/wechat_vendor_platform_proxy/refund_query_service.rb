@@ -26,7 +26,9 @@ module WechatVendorPlatformProxy
     #   }
     def perform(refund_params={})
       request_params = generate_refund_params(refund_params)
-      call_refund_query_api(request_params)
+      return_info = call_refund_query_api(request_params)
+      req_info = Hash.from_xml(EncryptionService.new(vendor).decrypt(return_info["req_info"]))
+      return_info.except("req_info").merge(req_info)
     end
 
     private
