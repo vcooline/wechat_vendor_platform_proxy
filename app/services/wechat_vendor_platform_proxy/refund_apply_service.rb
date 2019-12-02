@@ -8,7 +8,7 @@ module WechatVendorPlatformProxy
 
     class << self
       def perform(refund_params={})
-        new(get_vendor(refund_params[:sub_mch_id] || refund_params[:mch_id])).perform(refund_params)
+        new(get_vendor(refund_params[:mch_id])).perform(refund_params)
       end
 
       private
