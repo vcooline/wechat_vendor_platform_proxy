@@ -51,7 +51,7 @@ module WechatVendorPlatformProxy
 
       def call_order_api(request_params)
         Rails.logger.info "WechatVendorPlatformProxy UnifiedOrderService call order api reqt: #{request_params.to_json}"
-        resp = Faraday.post "https://api.mch.weixin.qq.com/pay/unifiedorder", request_params.to_xml(dasherize: false)
+        resp = Faraday.post "https://api.mch.weixin.qq.com/pay/unifiedorder", request_params.to_xml(dasherize: false), {"Content-Type" => "application/xml", "Accept-Encoding" => "identity"}
         Rails.logger.info "WechatVendorPlatformProxy UnifiedOrderService call order api resp(#{resp.status}): #{resp.body.squish}"
         Hash.from_xml(resp.body)["xml"]
       end
