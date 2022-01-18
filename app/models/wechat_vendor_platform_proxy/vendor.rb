@@ -5,7 +5,7 @@ module WechatVendorPlatformProxy
     validates :mch_id, presence: true, uniqueness: true
     validates_presence_of :type
 
-    enum type: {
+    enum :type, {
       normal_vendor: 1,
       service_provider: 2,
       sub_vendor: 3
