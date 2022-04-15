@@ -18,6 +18,8 @@ module WechatVendorPlatformProxy
     validates :mch_id, presence: true, uniqueness: true
     validates_presence_of :type
 
+    alias_attribute :sign_key, :v2_key
+
     def to_s
       mch_id
     end
