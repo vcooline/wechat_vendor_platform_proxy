@@ -18,6 +18,9 @@ module WechatVendorPlatformProxy
     validates :mch_id, presence: true, uniqueness: true
     validates_presence_of :type
 
+    accepts_nested_attributes_for :api_client_certificates, allow_destroy: true
+    accepts_nested_attributes_for :platform_certificates, allow_destroy: true
+
     alias_attribute :sign_key, :v2_key
 
     def to_s
