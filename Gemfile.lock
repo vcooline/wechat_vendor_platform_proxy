@@ -3,6 +3,7 @@ PATH
   specs:
     wechat_vendor_platform_proxy (0.1.1)
       faraday
+      faraday-multipart
       jbuilder
       kaminari
       rails (>= 6.1)
@@ -83,6 +84,8 @@ GEM
     faraday (2.1.0)
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
+    faraday-multipart (1.0.3)
+      multipart-post (>= 1.2, < 3)
     faraday-net_http (2.0.1)
     ffi (1.15.5)
     globalid (1.0.0)
@@ -115,6 +118,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.7.1)
     minitest (5.15.0)
+    multipart-post (2.1.1)
     net-imap (0.2.3)
       digest
       net-protocol

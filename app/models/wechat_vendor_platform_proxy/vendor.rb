@@ -23,5 +23,13 @@ module WechatVendorPlatformProxy
     def to_s
       mch_id
     end
+
+    def api_client_key
+      latest_api_client_certificate&.key
+    end
+
+    def api_client_cert
+      latest_api_client_certificate&.cert
+    end
   end
 end
