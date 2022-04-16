@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "kaminari"
   spec.add_dependency "jbuilder"
   spec.add_dependency "faraday"
+  spec.add_dependency "faraday-multipart"
 
   spec.add_development_dependency "sqlite3"
 end

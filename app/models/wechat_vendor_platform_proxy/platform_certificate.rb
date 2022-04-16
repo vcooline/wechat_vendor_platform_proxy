@@ -3,7 +3,7 @@ module WechatVendorPlatformProxy
     belongs_to :vendor
 
     validates :serial_no, presence: true, uniqueness: true
-    validates_presence_of :cert
+    validates_presence_of :cert, :effective_at, :expire_at
 
     scope :effective, -> { where("effective_at <= :now and expire_at >= :now", now: DateTime.now) }
 

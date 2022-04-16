@@ -5,6 +5,10 @@ module WechatVendorPlatformProxy
         @api_client ||= ApiClient.new(vendor)
       end
 
+      def upload_client
+        @upload_client ||= UploadClient.new(vendor)
+      end
+
       def cipher
         @cipher ||= CipherService.new(vendor)
       end

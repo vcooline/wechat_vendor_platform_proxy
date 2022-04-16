@@ -1,6 +1,7 @@
 require "kaminari"
 require "jbuilder"
 require "faraday"
+require "faraday/multipart"
 
 module WechatVendorPlatformProxy
   class Engine < ::Rails::Engine
