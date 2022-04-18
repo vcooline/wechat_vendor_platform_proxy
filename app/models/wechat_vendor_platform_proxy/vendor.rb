@@ -18,6 +18,7 @@ module WechatVendorPlatformProxy
     validates :mch_id, presence: true, uniqueness: true
     validates_presence_of :type
 
+    accepts_nested_attributes_for :latest_api_client_certificate # for use as unpersisted temporary data
     accepts_nested_attributes_for :api_client_certificates, allow_destroy: true
     accepts_nested_attributes_for :platform_certificates, allow_destroy: true
 

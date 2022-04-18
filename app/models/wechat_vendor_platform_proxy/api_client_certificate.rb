@@ -5,7 +5,7 @@ module WechatVendorPlatformProxy
     validates :serial_no, presence: true, uniqueness: true
     validates_presence_of :key, :cert, :effective_at, :expire_at
 
-    before_validation :set_initial_attrs, on: :create
+    before_validation :sync_cert_info, on: :create
 
     scope :effective, -> { where("effective_at <= :now and expire_at >= :now", now: DateTime.now) }
 
@@ -13,14 +13,12 @@ module WechatVendorPlatformProxy
       DateTime.now.between? effective_at, expire_at
     end
 
-    private
-
-      def set_initial_attrs
-        OpenSSL::X509::Certificate.new(cert).then do |c|
-          self.serial_no = c.serial.to_s(16)
-          self.effective_at = c.not_before
-          self.expire_at = c.not_after
-        end
+    def sync_cert_info
+      OpenSSL::X509::Certificate.new(cert).then do |c|
+        self.serial_no = c.serial.to_s(16)
+        self.effective_at = c.not_before
+        self.expire_at = c.not_after
       end
+    end
   end
 end
