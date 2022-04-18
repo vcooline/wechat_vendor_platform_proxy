@@ -1,9 +1,14 @@
 module WechatVendorPlatformProxy
   module V3
     class PlatformCertificateService < ApiBaseService
+      SignError = Class.new StandardError
+
       def get(decrypt: true)
         resp = api_client.get "/v3/certificates"
-        JSON.parse(resp.body)["data"].map do |cert_info|
+        resp_info = JSON.parse(resp.body)
+        raise SignError, resp_info["message"] if resp_info["code"].eql?("SIGN_ERROR")
+
+        resp_info["data"].map do |cert_info|
           cert_info["cert"] = cipher.decrypt(**cert_info["encrypt_certificate"].slice("ciphertext", "nonce", "associated_data").symbolize_keys) if decrypt
           cert_info
         end
