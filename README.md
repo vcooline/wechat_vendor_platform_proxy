@@ -7,6 +7,29 @@
 
     Mount engine in host rails routes: mount WechatVendorPlatformProxy::Engine, at: "/wxpay"
 
+## Definations
+
+* marketing 营销工具
+
+    * cash_coupon 代金券
+    * business_coupon 商家券
+
+* business_circle 商圈
+
+* gold_plan 点金计划
+
+* ecommerce 电商收付通
+
+* profit_sharing 分账
+
+* brand_profit_sharing 品牌分账
+
+* risk 违规管理
+
+* merchant_service 消费者投诉
+
+* smart_guide 支付即服务
+
 ## Installation
 Add this line to your application's Gemfile:
 
