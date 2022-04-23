@@ -50,6 +50,22 @@ module WechatVendorPlatformProxy
       ELSE_BANK_ACCOUNT_TYPE = {
         "对公银行账户" => "BANK_ACCOUNT_TYPE_CORPORATE"
       }.freeze
+
+      def sync_media_ids(applyment, changes)
+        # TODO
+      end
+
+      def sync_encrypt_fields(applyment, changes)
+        # TODO
+      end
+
+      def submit(applyment)
+        # TODO
+      end
+
+      def query(applyment)
+        # TODO
+      end
     end
   end
 end

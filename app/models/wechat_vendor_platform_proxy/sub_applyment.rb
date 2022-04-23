@@ -2,7 +2,8 @@ module WechatVendorPlatformProxy
   class SubApplyment < ApplicationRecord
     belongs_to :owner, polymorphic: true
 
-    enum state: {
+    enum :state, {
+      ready: 0,
       editting: 10,
       auditing: 20,
       rejected: 30,
@@ -11,7 +12,7 @@ module WechatVendorPlatformProxy
       signing: 60,
       finished: 70,
       canceled: 80
-    }
+    }, default: :ready
 
     validates :business_code, presence: true, uniqueness: true
 
