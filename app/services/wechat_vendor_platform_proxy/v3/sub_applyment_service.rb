@@ -75,8 +75,13 @@ module WechatVendorPlatformProxy
         %w[addition_info business_addition_pics_gids]
       ].freeze
 
-      def sync_media_ids(applyment, changes)
-        # TODO
+      def sync_media_fields(applyment, changes)
+        MEDIA_FIELD_KEYS.each do |field_key|
+          prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
+          next if curr.eql?(prev)
+
+          sync_media_field(applyment, field_key, curr)
+        end
       end
 
       def sync_encrypt_fields(applyment, changes)
@@ -98,6 +103,25 @@ module WechatVendorPlatformProxy
       def query(applyment)
         # TODO
       end
+
+      private
+
+        def gid_to_media_id(gid)
+          GlobalID::Locator.locate(gid)&.then do |obj|
+            media_file = URI.parse(Addressable::URI.parse(obj.private_url).normalize).open
+            media_service.upload_image(media_file)["media_id"]
+          end
+        end
+
+        def sync_media_field(applyment, field_key, field_value)
+          if field_value.is_a?(Array)
+            media_ids = field_value.map(&method(:gid_to_media_id)).compact
+            applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_suffix("_gids") => media_ids })
+          else
+            media_id = gid_to_media_id(field_value).to_s
+            applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_suffix("_gid") => media_id })
+          end
+        end
     end
   end
 end

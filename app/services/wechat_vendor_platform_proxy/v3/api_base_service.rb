@@ -12,6 +12,10 @@ module WechatVendorPlatformProxy
       def cipher
         @cipher ||= CipherService.new(vendor)
       end
+
+      def media_service
+        @media_service ||= MediaService.new(vendor)
+      end
     end
   end
 end
