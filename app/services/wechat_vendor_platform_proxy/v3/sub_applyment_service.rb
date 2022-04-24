@@ -51,12 +51,44 @@ module WechatVendorPlatformProxy
         "对公银行账户" => "BANK_ACCOUNT_TYPE_CORPORATE"
       }.freeze
 
+      ORIGINAL_FIELD_KEYS = [
+        %w[contact_info original_contact_name],
+        %w[contact_info original_contact_id_numbe],
+        %w[contact_info original_mobile_phone],
+        %w[contact_info original_contact_email],
+        %w[subject_info identity_info id_card_info original_id_card_name],
+        %w[subject_info identity_info id_card_info original_id_card_number],
+        %w[bank_account_info original_account_name],
+        %w[bank_account_info original_account_number]
+      ].freeze
+
+      MEDIA_FIELD_KEYS = [
+        %w[subject_info business_license_info license_copy_gid],
+        %w[subject_info certificate_info cert_copy_gid],
+        %w[subject_info certificate_letter_copy_gid],
+        %w[subject_info identity_info id_card_info id_card_copy_gid],
+        %w[subject_info identity_info id_card_info id_card_national_gid],
+        %w[business_info sales_info biz_store_info store_entrance_pic_gids],
+        %w[business_info sales_info biz_store_info indoor_pic_gids],
+        %w[business_info sales_info mp_info mp_pics_gids],
+        %w[settlement_info qualifications_gids],
+        %w[addition_info business_addition_pics_gids]
+      ].freeze
+
       def sync_media_ids(applyment, changes)
         # TODO
       end
 
       def sync_encrypt_fields(applyment, changes)
-        # TODO
+        ORIGINAL_FIELD_KEYS.each do |field_key|
+          prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
+          next if curr.eql?(prev)
+
+          encrypted_value = cipher.encrypt(curr)
+          applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_prefix("original_") => encrypted_value })
+        end
+
+        applyment.save
       end
 
       def submit(applyment)
