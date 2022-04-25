@@ -1,0 +1,36 @@
+---
+zh-CN:
+  wechat_vendor_platform_proxy:
+    engine: "微信支付平台"
+  activerecord:
+    models:
+      wechat_vendor_platform_proxy/sub_applyment: "商户进件"
+    attributes:
+      wechat_vendor_platform_proxy/sub_applyment:
+        state: "状态"
+      wechat_vendor_platform_proxy/sub_applyment/state:
+        ready: "已创建"
+        editting: "编辑中"
+        auditing: "审核中"
+        rejected: "已驳回"
+        to_be_confirmed: "待账户验证"
+        to_be_signed: "待签约"
+        signing: "开通权限中"
+        finished: "已完成"
+        canceled: "已作废"
+      wechat_vendor_platform_proxy/sub_applyment/contact_info:
+        contact_name: "超级管理员姓名"
+        mobile_phone: "联系手机"
+        contact_email: "联系邮箱"
+      wechat_vendor_platform_proxy/sub_applyment/subject_info:
+        subject_type: "主体类型"
+      wechat_vendor_platform_proxy/sub_applyment/subject_info/subject_type:
+        SUBJECT_TYPE_MICRO: "小微商户"
+        SUBJECT_TYPE_INDIVIDUAL: "个体户"
+        SUBJECT_TYPE_ENTERPRISE: "企业"
+        SUBJECT_TYPE_GOVERNMENT: "政府机关"
+        SUBJECT_TYPE_INSTITUTIONS: "事业单位"
+        SUBJECT_TYPE_OTHERS: "社会组织"
+      wechat_vendor_platform_proxy/sub_applyment/business_info:
+        merchant_shortname: "商户简称"
+        service_phone: "客服电话"
