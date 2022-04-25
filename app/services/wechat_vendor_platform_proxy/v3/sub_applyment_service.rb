@@ -42,6 +42,10 @@ module WechatVendorPlatformProxy
         # "企业微信" => "SALES_SCENES_WEWORK"
       }.freeze
 
+      MICRO_BANK_ACCOUNT_TYPE = {
+        "个人银行卡" => "BANK_ACCOUNT_TYPE_PERSONAL"
+      }.freeze
+
       INDIVIDUAL_BANK_ACCOUNT_TYPE = {
         "个人银行卡" => "BANK_ACCOUNT_TYPE_PERSONAL",
         "对公银行账户" => "BANK_ACCOUNT_TYPE_CORPORATE"
