@@ -105,7 +105,10 @@ module WechatVendorPlatformProxy
       end
 
       def submit(applyment)
-        resp = api_client.post "/v3/applyment4sub/applyment/", build_api_json(applyment)
+        resp = api_client.post \
+          "/v3/applyment4sub/applyment/",
+          build_api_json(applyment),
+          extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
         resp_info = JSON.parse(resp.body)
 
         resp_info["applyment_id"]&.then do |applyment_id|
