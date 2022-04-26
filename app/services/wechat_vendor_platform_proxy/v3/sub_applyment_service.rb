@@ -26,11 +26,11 @@ module WechatVendorPlatformProxy
       }.freeze
 
       ID_DOC_TYPE = {
-        "中国大陆居民-身份证" => "DENTIFICATION_TYPE_IDCARD",
-        "其他国家或地区居民-护照" => "DENTIFICATION_TYPE_OVERSEA_PASSPORT",
-        "中国香港居民-来往内地通行证" => "DENTIFICATION_TYPE_HONGKONG_PASSPORT",
-        "中国澳门居民-来往内地通行证" => "DENTIFICATION_TYPE_MACAO_PASSPORT",
-        "中国台湾居民-来往大陆通行证" => "DENTIFICATION_TYPE_TAIWAN_PASSPORT"
+        "中国大陆居民-身份证" => "IDENTIFICATION_TYPE_IDCARD",
+        "其他国家或地区居民-护照" => "IDENTIFICATION_TYPE_OVERSEA_PASSPORT",
+        "中国香港居民-来往内地通行证" => "IDENTIFICATION_TYPE_HONGKONG_PASSPORT",
+        "中国澳门居民-来往内地通行证" => "IDENTIFICATION_TYPE_MACAO_PASSPORT",
+        "中国台湾居民-来往大陆通行证" => "IDENTIFICATION_TYPE_TAIWAN_PASSPORT"
       }.freeze
 
       SALES_SCENES_TYPE = {
@@ -118,9 +118,10 @@ module WechatVendorPlatformProxy
 
       def build_api_json(applyment)
         applyment.slice(:business_code, :contact_info, :subject_info, :business_info, :settlement_info, :bank_account_info, :addition_info)
-          .tap { |h| h.deep_merge!({ subject_info: { identity_info: { owner: applyment.subject_info.dig("identity_info", "owner").to_i.nonzero? } } }) }
+          .tap { |h| h.deep_merge!({ subject_info: { identity_info: { owner: applyment.subject_info.dig("identity_info", "owner").to_i.positive? } } }) }
           .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
           .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
+          .then(&method(:slice_subject_keys))
           .to_json
       end
 
@@ -142,6 +143,27 @@ module WechatVendorPlatformProxy
             media_id = gid_to_media_id(field_value).to_s
             applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_suffix("_gid") => media_id })
           end
+        end
+
+        def slice_subject_keys(data = {})
+          case data.dig("subject_info", "subject_type")
+          when "SUBJECT_TYPE_MICRO"
+            data["subject_info"].slice!("subject_type", "micro_biz_info", "identity_info")
+            case data.dig("subject_info", "micro_biz_info", "micro_biz_type")
+            when "MICRO_TYPE_STORE"
+              data.dig("subject_info", "micro_biz_info").slice!("micro_biz_type", "micro_store_info")
+            when "MICRO_TYPE_MOBILE"
+              data.dig("subject_info", "micro_biz_info").slice!("micro_biz_type", "micro_mobile_info")
+            when "MICRO_TYPE_ONLINE"
+              data.dig("subject_info", "micro_biz_info").slice!("micro_biz_type", "micro_online_info")
+            end
+          when "SUBJECT_TYPE_INDIVIDUAL", "SUBJECT_TYPE_ENTERPRISE"
+            data["subject_info"].slice!("subject_type", "business_license_info", "identity_info")
+          when "SUBJECT_TYPE_INSTITUTIONS", "SUBJECT_TYPE_GOVERNMENT", "SUBJECT_TYPE_OTHERS"
+            data["subject_info"].slice!("subject_type", "certificate_info", "identity_info")
+          end
+
+          data
         end
     end
   end
