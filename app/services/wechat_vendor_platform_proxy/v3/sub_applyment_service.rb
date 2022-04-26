@@ -79,11 +79,11 @@ module WechatVendorPlatformProxy
         %w[addition_info business_addition_pics_gids]
       ].freeze
 
-      def sync_media_fields(applyment, changes = {}, reset: false)
+      def sync_media_fields(applyment, changes = {}, force: false)
         MEDIA_FIELD_KEYS.each do |field_key|
           prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
-          curr ||= applyment.attributes.dig(*field_key) if reset
-          next if curr.blank? || (curr.eql?(prev) && !reset)
+          curr ||= applyment.attributes.dig(*field_key) if force
+          next if curr.blank? || (curr.eql?(prev) && !force)
 
           sync_media_field(applyment, field_key, curr)
         end
@@ -91,11 +91,11 @@ module WechatVendorPlatformProxy
         applyment.save
       end
 
-      def sync_encrypt_fields(applyment, changes = {}, reset: false)
+      def sync_encrypt_fields(applyment, changes = {}, force: false)
         ORIGINAL_FIELD_KEYS.each do |field_key|
           prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
-          curr ||= applyment.attributes.dig(*field_key) if reset
-          next if curr.blank? || (curr.eql?(prev) && !reset)
+          curr ||= applyment.attributes.dig(*field_key) if force
+          next if curr.blank? || (curr.eql?(prev) && !force)
 
           encrypted_value = cipher.encrypt(curr)
           applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_prefix("original_") => encrypted_value })
@@ -105,11 +105,23 @@ module WechatVendorPlatformProxy
       end
 
       def submit(applyment)
-        # TODO
+        resp = api_client.post "/v3/applyment4sub/applyment/", build_api_json(applyment)
+        resp_info = JSON.parse(resp.body)
+
+        resp_info["applyment_id"]&.then do |applyment_id|
+          applyment.update(applyment_id:)
+        end
       end
 
       def query(applyment)
-        # TODO
+      end
+
+      def build_api_json(applyment)
+        applyment.slice(:business_code, :contact_info, :subject_info, :business_info, :settlement_info, :bank_account_info, :addition_info)
+          .tap { |h| h.deep_merge!({ subject_info: { identity_info: { owner: applyment.subject_info.dig("identity_info", "owner").to_i.nonzero? } } }) }
+          .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
+          .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
+          .to_json
       end
 
       private
