@@ -22,6 +22,8 @@ module WechatVendorPlatformProxy
     accepts_nested_attributes_for :api_client_certificates, allow_destroy: true
     accepts_nested_attributes_for :platform_certificates, allow_destroy: true
 
+    after_commit :trigger_platform_certificate_sync
+
     alias_attribute :sign_key, :v2_key
 
     def to_s
@@ -35,5 +37,11 @@ module WechatVendorPlatformProxy
     def api_client_cert
       latest_api_client_certificate&.cert
     end
+
+    private
+
+      def trigger_platform_certificate_sync
+        V3::PlatformCertificateSyncJob.perform_later(self.id)
+      end
   end
 end

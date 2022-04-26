@@ -79,19 +79,23 @@ module WechatVendorPlatformProxy
         %w[addition_info business_addition_pics_gids]
       ].freeze
 
-      def sync_media_fields(applyment, changes)
+      def sync_media_fields(applyment, changes = {}, reset: false)
         MEDIA_FIELD_KEYS.each do |field_key|
           prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
-          next if curr.eql?(prev)
+          curr ||= applyment.attributes.dig(*field_key) if reset
+          next if curr.blank? || (curr.eql?(prev) && !reset)
 
           sync_media_field(applyment, field_key, curr)
         end
+
+        applyment.save
       end
 
-      def sync_encrypt_fields(applyment, changes)
+      def sync_encrypt_fields(applyment, changes = {}, reset: false)
         ORIGINAL_FIELD_KEYS.each do |field_key|
           prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
-          next if curr.eql?(prev)
+          curr ||= applyment.attributes.dig(*field_key) if reset
+          next if curr.blank? || (curr.eql?(prev) && !reset)
 
           encrypted_value = cipher.encrypt(curr)
           applyment.attributes.dig(*field_key[0...-1]).merge!({ field_key[-1].delete_prefix("original_") => encrypted_value })
@@ -112,7 +116,8 @@ module WechatVendorPlatformProxy
 
         def gid_to_media_id(gid)
           GlobalID::Locator.locate(gid)&.then do |obj|
-            media_file = URI.parse(Addressable::URI.parse(obj.private_url).normalize).open
+            media_file = Tempfile.new(obj.name.rpartition(".").then{ ["#{_1}.", ".#{_3}"] }, encoding: 'ascii-8bit')
+              .tap { |f| f.write(URI.parse(Addressable::URI.parse(obj.private_url).normalize).read) and f.rewind }
             media_service.upload_image(media_file)["media_id"]
           end
         end
