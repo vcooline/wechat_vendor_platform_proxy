@@ -18,7 +18,7 @@
 
 * gold_plan 点金计划
 
-* ecommerce 电商收付通
+* e_commerce 电商收付通
 
 * profit_sharing 分账
 
