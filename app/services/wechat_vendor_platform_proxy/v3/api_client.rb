@@ -3,13 +3,23 @@ module WechatVendorPlatformProxy
     class ApiClient < VendorBaseService
       API_GATEWAY = "https://api.mch.weixin.qq.com".freeze
 
-      def get(...)
-        api_call("GET", ...)
+      %w[GET POST PUT PATCH].each do |http_method|
+        define_method http_method.underscore do |*args, **kws, &block|
+          api_call(http_method, *args, **kws, &block)
+        end
       end
 
-      def post(...)
-        api_call("POST", ...)
-      end
+      # def get(...)
+      #   api_call("GET", ...)
+      # end
+      #
+      # def post(...)
+      #   api_call("POST", ...)
+      # end
+      #
+      # def patch(...)
+      #   api_call("Patch", ...)
+      # end
 
       private
 

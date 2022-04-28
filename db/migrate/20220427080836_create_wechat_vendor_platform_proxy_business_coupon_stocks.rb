@@ -9,12 +9,14 @@ class CreateWechatVendorPlatformProxyBusinessCouponStocks < ActiveRecord::Migrat
       t.string :comment
       t.string :goods_name
       t.integer :stock_type
+      t.integer :stock_state
       t.integer :coupon_code_mode
       t.jsonb :coupon_use_rule
       t.jsonb :stock_send_rule
       t.jsonb :custom_entrance
       t.jsonb :display_pattern_info
       t.jsonb :notify_config
+      t.jsonb :send_count_information
 
       t.timestamps
     end

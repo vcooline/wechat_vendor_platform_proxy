@@ -4,6 +4,14 @@ module WechatVendorPlatformProxy
 
     belongs_to :origin, polymorphic: true
 
+    enum :stock_state, {
+      ready: 0,
+      unaudit: 10,
+      running: 20,
+      stoped: 30,
+      paused: 40
+    }, default: :ready
+
     enum :coupon_code_mode, {
       wechatpay_mode: 10,
       merchant_api: 20,
@@ -27,6 +35,7 @@ module WechatVendorPlatformProxy
         self.custom_entrance ||= {}
         self.display_pattern_info ||= {}
         self.notify_config ||= {}
+        self.send_count_information ||= {}
       end
   end
 end
