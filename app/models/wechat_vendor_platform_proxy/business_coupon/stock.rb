@@ -4,6 +4,8 @@ module WechatVendorPlatformProxy
 
     belongs_to :origin, polymorphic: true
 
+    has_many :coupons, foreign_key: :stock_id, primary_key: :stock_id
+
     enum :stock_state, {
       ready: 0,
       unaudit: 10,
@@ -17,8 +19,6 @@ module WechatVendorPlatformProxy
       merchant_api: 20,
       merchant_upload: 30
     }, default: :merchant_api
-
-    has_many :coupons, foreign_key: :stock_id, primary_key: :stock_id
 
     validates_presence_of :out_request_no, :origin_type, :origin_id, :belong_merchant, :stock_type, :coupon_code_mode
     validates_uniqueness_of :stock_id, :out_request_no

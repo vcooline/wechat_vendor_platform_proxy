@@ -16,6 +16,8 @@ class CreateWechatVendorPlatformProxyBusinessCouponCoupons < ActiveRecord::Migra
       t.datetime :expire_time
       t.datetime :receive_time
       t.datetime :use_time
+      t.string :app_id
+      t.string :open_id
 
       t.timestamps
     end

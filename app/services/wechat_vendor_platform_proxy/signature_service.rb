@@ -23,10 +23,10 @@ module WechatVendorPlatformProxy
       @vendor = vendor
     end
 
-    def sign(sign_params)
+    def sign(sign_params, sign_type: "MD5")
       sign_data = sign_params.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}"
 
-      if sign_params[:sign_type] == "HMAC-SHA256"
+      if sign_type == "HMAC-SHA256"
         OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), vendor.sign_key, sign_data).upcase
       else
         # Digest::MD5.hexdigest("#{URI.unescape(sign_params.to_query)}&key=#{vendor.sign_key}").upcase

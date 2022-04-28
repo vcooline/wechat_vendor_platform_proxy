@@ -45,6 +45,18 @@ module WechatVendorPlatformProxy
         stock
       end
 
+      def receive_coupon_url(coupon)
+        query_params = {
+          stock_id: coupon.stock_id,
+          out_request_no: "#{coupon.stock.belong_merchant}#{coupon.created_at.strftime('%Y%m%d%H%M%S')}#{coupon.id}",
+          send_coupon_merchant: coupon.stock.belong_merchant,
+          open_id: coupon.open_id,
+          coupon_code: coupon.code
+        }.tap { |q| q[:sign] = v2_sign(q.slice(:stock_id, :out_request_no, :send_coupon_merchant, :open_id, :coupon_code)) }
+
+        "https://action.weixin.qq.com/busifavor/getcouponinfo?#{query_params.to_query}#wechat_redirect"
+      end
+
       private
 
         def build_create_stock_json(stock)
@@ -76,6 +88,10 @@ module WechatVendorPlatformProxy
             .tap { |attrs| attrs["stock_send_rule"].slice!("prevent_api_abuse") }
             .tap { |attrs| attrs["display_pattern_info"].delete("finder_info") }
             .to_json
+        end
+
+        def v2_sign(sign_params)
+          WechatVendorPlatformProxy::SignatureService.new(vendor).sign sign_params, sign_type: "HMAC-SHA256"
         end
     end
   end
