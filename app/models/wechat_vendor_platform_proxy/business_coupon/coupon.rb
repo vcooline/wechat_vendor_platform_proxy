@@ -19,6 +19,12 @@ module WechatVendorPlatformProxy
 
     before_validation :set_initial_attrs, on: :create
 
+    delegate :vendor, to: :stock
+
+    def to_receive_url
+      Marketing::BusinessCouponService.new(vendor).receive_coupon_url(self)
+    end
+
     private
 
       def set_initial_attrs

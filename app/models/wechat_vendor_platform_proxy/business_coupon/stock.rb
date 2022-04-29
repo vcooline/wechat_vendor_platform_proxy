@@ -3,6 +3,7 @@ module WechatVendorPlatformProxy
     include BusinessCoupon::StockTypeEnum
 
     belongs_to :origin, polymorphic: true
+    belongs_to :vendor, foreign_key: :belong_merchant, primary_key: :mch_id
 
     has_many :coupons, foreign_key: :stock_id, primary_key: :stock_id
 
