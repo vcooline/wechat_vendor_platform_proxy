@@ -5,6 +5,8 @@ class CreateWechatVendorPlatformProxyBusinessCouponCoupons < ActiveRecord::Migra
       t.string :stock_id, index: true
       t.string :send_request_no, index: { unique: true }
       t.string :use_request_no, index: { unique: true }
+      t.string :deactivate_request_no
+      t.string :deactivate_reason
       t.string :code, index: { unique: true }
       t.string :stock_name
       t.string :comment

@@ -17,9 +17,9 @@ module WechatVendorPlatformProxy
     validates_presence_of :stock_id, :send_request_no, :code
     validates_uniqueness_of :code
 
-    before_validation :set_initial_attrs, on: :create
+    before_validation :set_initial_attrs, :sync_stock_attrs, on: :create
 
-    delegate :vendor, to: :stock
+    delegate :belong_merchant, :vendor, to: :stock
 
     def to_receive_url
       Marketing::BusinessCouponService.new(vendor).receive_coupon_url(self)
@@ -28,12 +28,14 @@ module WechatVendorPlatformProxy
     private
 
       def set_initial_attrs
-        self.code ||= origin.code if origin.has_attribute?(:code)
-        self.stock_name ||= stock.stock_name
-        self.comment ||= stock.comment
-        self.goods_name ||= stock.goods_name
-        self.stock_type ||= stock.stock_type
-        self.coupon_use_rule ||= self.coupon_use_rule
+        self.code ||= origin.code if origin&.has_attribute?(:code)
+        self.send_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
+        self.use_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
+        self.deactivate_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
+      end
+
+      def sync_stock_attrs
+        self.assign_attributes stock.attributes.slice(*%w[stock_name comment goods_name stock_type coupon_use_rule])
       end
   end
 end

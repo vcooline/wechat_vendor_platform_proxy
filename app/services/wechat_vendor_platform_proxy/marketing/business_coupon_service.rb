@@ -38,7 +38,7 @@ module WechatVendorPlatformProxy
           %w[coupon_use_rule custom_entrance display_pattern_info notify_config send_count_information stock_send_rule].each do |field_key|
             stock.attributes[field_key].deep_merge!(stock_info[field_key])
           end
-          stock.stock_state = stock_info["stock_state"].downcase
+          stock.stock_state = stock_info["stock_state"].underscore
           stock.save
         end
 
@@ -55,6 +55,22 @@ module WechatVendorPlatformProxy
         }.tap { |q| q[:sign] = v2_sign(q.slice(:stock_id, :out_request_no, :send_coupon_merchant, :open_id, :coupon_code)) }
 
         "https://action.weixin.qq.com/busifavor/getcouponinfo?#{query_params.to_query}#wechat_redirect"
+      end
+
+      def get_coupon(coupon)
+        resp = api_client.get "/v3/marketing/busifavor/users/#{coupon.open_id}/coupons/#{coupon.code}/appids/#{coupon.app_id}"
+        JSON.parse(resp.body)
+      end
+
+      def sync_coupon(coupon)
+        get_coupon(coupon).then do |coupon_info|
+          coupon.assign_attributes \
+            coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no deactivate_reason])
+          coupon.state = coupon_info["coupon_state"].underscore
+          coupon.save
+        end
+
+        coupon
       end
 
       private
