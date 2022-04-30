@@ -9,6 +9,6 @@ WechatVendorPlatformProxy::Engine.routes.draw do
   end
 
   namespace :business_coupon do
-
+    resources :wxpay_callback_events, only: [:create]
   end
 end
