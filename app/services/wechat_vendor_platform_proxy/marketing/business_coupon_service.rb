@@ -14,7 +14,7 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/callbacks",
           {
             mchid: vendor.mch_id,
-            notify_url: (url || "https://dev-3021.dd-life.com/welcome/test")
+            notify_url: (url || WechatVendorPlatformProxy::Engine.routes.url_helpers.business_coupon_wxpay_callback_events_url(host: ENVConfig.app_frontend_base_url, protocol: "https"))
           }.to_json
 
         JSON.parse(resp.body)
