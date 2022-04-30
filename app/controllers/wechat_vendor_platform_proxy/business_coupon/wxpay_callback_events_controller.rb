@@ -1,5 +1,6 @@
 module WechatVendorPlatformProxy
   class BusinessCoupon::WxpayCallbackEventsController < ApplicationController
+    skip_before_action :verify_authenticity_token, only: [:create]
     before_action :verify_signature, :set_vendor, only: [:create]
 
     def create
