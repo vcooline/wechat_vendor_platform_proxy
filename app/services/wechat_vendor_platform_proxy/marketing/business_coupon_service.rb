@@ -73,6 +73,16 @@ module WechatVendorPlatformProxy
         coupon
       end
 
+      def use_coupon(coupon)
+        resp = api_client.post \
+          "/v3/marketing/busifavor/coupons/use",
+          build_use_coupon_json(coupon)
+
+        JSON.parse(resp.body).tap do |info|
+          info["wechatpay_use_time"]&.then { |use_time| coupon.update(state: :used, use_time:) }
+        end
+      end
+
       private
 
         def build_create_stock_json(stock)
@@ -104,6 +114,17 @@ module WechatVendorPlatformProxy
             .tap { |attrs| attrs["stock_send_rule"].slice!("prevent_api_abuse") }
             .tap { |attrs| attrs["display_pattern_info"].delete("finder_info") }
             .to_json
+        end
+
+        def build_use_coupon_json(coupon)
+          {
+            coupon_code: coupon.code,
+            use_request_no: coupon.use_request_no,
+            stock_id: coupon.stock_id,
+            appid: coupon.app_id,
+            openid: coupon.open_id,
+            use_time: DateTime.now.rfc3339
+          }.to_json
         end
 
         def v2_sign(sign_params)
