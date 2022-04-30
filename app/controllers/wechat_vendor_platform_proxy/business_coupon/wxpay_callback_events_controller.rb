@@ -5,7 +5,7 @@ module WechatVendorPlatformProxy
 
     def create
       logger.info "#{self.class.name} #{self.action_name} params: #{params.to_json}"
-      BusinessCoupon::CallbackEventJob.perform_later(@vendor.id, params.permit!)
+      BusinessCoupon::CallbackEventJob.perform_later(@vendor.id, HashWithIndifferentAccess.new(params.permit!))
       head :no_content
     rescue => e
       logger.error "#{self.class.name} #{self.action_name} #{e.class.name}: #{e.message}"
