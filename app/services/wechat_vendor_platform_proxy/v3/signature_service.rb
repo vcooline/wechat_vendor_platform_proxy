@@ -7,15 +7,19 @@ module WechatVendorPlatformProxy
       InvalidHeaderSignatureError = Class.new StandardError
 
       class << self
-        def self.verify_authorization_header(headers, payload = nil)
+        def verify_authorization_header(headers, payload = nil)
           vendor = detect_vendor_by_platform_serial_no(headers["Wechatpay-Serial"])
-          sign = new(vendor).sign(headers["Wechatpay-Timestamp"], headers["Wechatpay-Nonce"], payload)
-          raise InvalidHeaderSignatureError, "Invalid header signature" unless headers["Wechatpay-Signature"] == sign
+          return if OpenSSL::X509::Certificate.new(vendor.latest_platform_certficate.cert).public_key.verify \
+            "SHA256",
+            Base64.strict_decode64(headers["Wechatpay-Signature"]),
+            "#{headers['Wechatpay-Timestamp']}\n#{headers['Wechatpay-Nonce']}\n#{payload}\n"
+
+          raise InvalidHeaderSignatureError, "Invalid header signature"
         end
 
         def detect_vendor_by_platform_serial_no(serial_no)
           certificate = PlatformCertificate.find_by(serial_no:)
-          raise InvalidPlatformSerialNoError, "Invalid wechat pay certificate serial_no" unless cert.present?
+          raise InvalidPlatformSerialNoError, "Invalid wechat pay certificate serial_no" unless certificate.present?
 
           certificate.vendor
         end
