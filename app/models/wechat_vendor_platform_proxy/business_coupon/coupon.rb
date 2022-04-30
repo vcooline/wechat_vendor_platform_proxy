@@ -31,6 +31,7 @@ module WechatVendorPlatformProxy
         self.code ||= origin.code if origin&.has_attribute?(:code)
         self.send_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
         self.use_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
+        self.return_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
         self.deactivate_request_no ||= "#{self.belong_merchant}#{DateTime.now.strftime('%Y%m%d%H%M%S')}#{SecureRandom.rand(100..999)}"
       end
 

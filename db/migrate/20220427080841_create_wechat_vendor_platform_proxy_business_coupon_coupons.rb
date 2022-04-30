@@ -5,6 +5,7 @@ class CreateWechatVendorPlatformProxyBusinessCouponCoupons < ActiveRecord::Migra
       t.string :stock_id, index: true
       t.string :send_request_no, index: { unique: true }
       t.string :use_request_no, index: { unique: true }
+      t.string :return_request_no
       t.string :deactivate_request_no
       t.string :deactivate_reason
       t.string :code, index: { unique: true }
@@ -18,6 +19,8 @@ class CreateWechatVendorPlatformProxyBusinessCouponCoupons < ActiveRecord::Migra
       t.datetime :expire_time
       t.datetime :receive_time
       t.datetime :use_time
+      t.datetime :return_time
+      t.datetime :deactivate_time
       t.string :app_id
       t.string :open_id
 

@@ -65,7 +65,7 @@ module WechatVendorPlatformProxy
       def sync_coupon(coupon)
         get_coupon(coupon).then do |coupon_info|
           coupon.assign_attributes \
-            coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no deactivate_reason])
+            coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no deactivate_reason]).compact_blank
           coupon.state = coupon_info["coupon_state"].underscore
           coupon.save
         end
@@ -78,8 +78,32 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/coupons/use",
           build_use_coupon_json(coupon)
 
-        JSON.parse(resp.body).tap do |info|
-          info["wechatpay_use_time"]&.then { |use_time| coupon.update(state: :used, use_time:) }
+        JSON.parse(resp.body).tap do |resp_info|
+          resp_info["wechatpay_use_time"]&.then { |use_time| coupon.update(state: :used, use_time:) }
+        end
+      end
+
+      def return_coupon(coupon)
+        resp = api_client.post \
+          "/v3/marketing/busifavor/coupons/return",
+          { coupon_code: coupon.code, stock_id: coupon.stock_id, return_request_no: coupon.return_request_no }.to_json
+
+        JSON.parse(resp.body).tap do |resp_info|
+          resp_info["wechatpay_return_time"]&.then { |return_time| coupon.update(state: :sended, return_time:) }
+        end
+      end
+
+      def deactivate_coupon(coupon, reason: nil)
+        resp = api_client.post \
+          "/v3/marketing/busifavor/coupons/deactivate",
+          {
+            coupon_code: coupon.code, stock_id: coupon.stock_id,
+            deactivate_request_no: coupon.deactivate_request_no,
+            deactivate_reason: reason.presence || coupon.deactivate_reason
+          }.compact.to_json
+
+        JSON.parse(resp.body).tap do |resp_info|
+          resp_info["wechatpay_deactivate_time"]&.then { |deactivate_time| coupon.update(state: :deactivated, deactivate_time:) }
         end
       end
 
