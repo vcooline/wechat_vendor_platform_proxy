@@ -49,19 +49,18 @@ module WechatVendorPlatformProxy
 
       def get_stock(stock)
         resp = api_client.get "/v3/marketing/busifavor/stocks/#{stock.stock_id}"
-        JSON.parse(resp.body)
+        resp.success? ? JSON.parse(resp.body) : nil
       end
 
       def sync_stock(stock)
-        get_stock(stock).then do |stock_info|
+        get_stock(stock)&.then do |stock_info|
           %w[coupon_use_rule custom_entrance display_pattern_info notify_config send_count_information stock_send_rule].each do |field_key|
             stock.attributes[field_key].deep_merge!(stock_info[field_key])
           end
           stock.stock_state = stock_info["stock_state"].underscore
           stock.save
+          stock
         end
-
-        stock
       end
 
       def receive_coupon_url(coupon)
@@ -78,18 +77,17 @@ module WechatVendorPlatformProxy
 
       def get_coupon(coupon)
         resp = api_client.get "/v3/marketing/busifavor/users/#{coupon.open_id}/coupons/#{coupon.code}/appids/#{coupon.app_id}"
-        JSON.parse(resp.body)
+        resp.success? ? JSON.parse(resp.body) : nil
       end
 
       def sync_coupon(coupon)
-        get_coupon(coupon).then do |coupon_info|
+        get_coupon(coupon)&.then do |coupon_info|
           coupon.assign_attributes \
             coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no deactivate_reason]).compact_blank
           coupon.state = coupon_info["coupon_state"].underscore
           coupon.save
+          coupon
         end
-
-        coupon
       end
 
       def use_coupon(coupon)
