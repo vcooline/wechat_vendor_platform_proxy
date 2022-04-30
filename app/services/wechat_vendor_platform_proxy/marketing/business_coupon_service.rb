@@ -1,6 +1,25 @@
 module WechatVendorPlatformProxy
   module Marketing
     class BusinessCouponService < V3::ApiBaseService
+      def callback_url
+        resp = api_client.get "/v3/marketing/busifavor/callbacks?mchid=#{vendor.mch_id}"
+
+        JSON.parse(resp.body)
+      end
+
+      def callback_url=(url)
+        raise ArgumentError, "url is not valid." if url.present? && !/\A#{URI::DEFAULT_PARSER.make_regexp(['https'])}\z/.match?(url)
+
+        resp = api_client.post \
+          "/v3/marketing/busifavor/callbacks",
+          {
+            mchid: vendor.mch_id,
+            notify_url: (url || "https://dev-3021.dd-life.com/welcome/test")
+          }.to_json
+
+        JSON.parse(resp.body)
+      end
+
       def create_stock(stock)
         resp = api_client.post \
           "/v3/marketing/busifavor/stocks",

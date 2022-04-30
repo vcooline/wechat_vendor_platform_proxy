@@ -8,4 +8,7 @@ WechatVendorPlatformProxy::Engine.routes.draw do
   resources :bank_transfers, only: [:show, :create] do
   end
 
+  namespace :business_coupon do
+
+  end
 end
