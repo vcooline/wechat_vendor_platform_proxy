@@ -7,7 +7,7 @@ module WechatVendorPlatformProxy
         JSON.parse(resp.body)
       end
 
-      def callback_url=(url)
+      def callback_url=(url = nil)
         raise ArgumentError, "url is not valid." if url.present? && !/\A#{URI::DEFAULT_PARSER.make_regexp(['https'])}\z/.match?(url)
 
         resp = api_client.post \
@@ -19,6 +19,7 @@ module WechatVendorPlatformProxy
 
         JSON.parse(resp.body)
       end
+      alias_method :set_callback_url, :callback_url=
 
       def create_stock(stock)
         resp = api_client.post \
@@ -30,6 +31,7 @@ module WechatVendorPlatformProxy
             stock.update stock_id: resp_info["stock_id"], state: :unaudit
             BusinessCoupon::StockSyncJob.set(wait: 1.minute).perform_later(stock.id)
           end
+          set_callback_url(nil) if BusinessCoupon::Stock.where(vendor:).where.not(id: stock.id).exists?
         end
       end
 
