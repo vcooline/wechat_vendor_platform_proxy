@@ -25,7 +25,12 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/stocks",
           build_create_stock_json(stock)
 
-        JSON.parse(resp.body)
+        JSON.parse(resp.body).tap do |resp_info|
+          if resp_info["stock_id"].present?
+            stock.update stock_id: resp_info["stock_id"], state: :unaudit
+            BusinessCoupon::StockSyncJob.set(wait: 1.minute).perform_later(stock.id)
+          end
+        end
       end
 
       def update_stock_budget(stock, target_max_coupons: nil, current_max_coupons: nil)
