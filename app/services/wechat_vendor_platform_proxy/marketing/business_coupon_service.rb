@@ -77,7 +77,7 @@ module WechatVendorPlatformProxy
           %w[coupon_use_rule custom_entrance display_pattern_info notify_config send_count_information stock_send_rule].each do |field_key|
             stock.attributes[field_key].deep_merge!(stock_info[field_key])
           end
-          stock.stock_state = stock_info["stock_state"].underscore
+          stock.state = stock_info["stock_state"].underscore
           stock.save
           stock
         end
