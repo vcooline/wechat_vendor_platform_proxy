@@ -7,7 +7,7 @@ module WechatVendorPlatformProxy
 
     has_many :coupons, foreign_key: :stock_id, primary_key: :stock_id
 
-    enum :stock_state, {
+    enum :state, {
       ready: 0,
       unaudit: 10,
       running: 20,

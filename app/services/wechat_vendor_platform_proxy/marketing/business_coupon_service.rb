@@ -1,6 +1,19 @@
 module WechatVendorPlatformProxy
   module Marketing
     class BusinessCouponService < V3::ApiBaseService
+      ParamError = Class.new StandardError
+      SystemError = Class.new StandardError
+      ResourceAlreadyExists = Class.new StandardError
+      ResourceNotExists = Class.new StandardError
+      NoAuth = Class.new StandardError
+      AppidMchidNotMatch = Class.new StandardError
+      MchNotExists = Class.new StandardError
+      UserNotExists = Class.new StandardError
+      SystemError = Class.new StandardError
+      FrequencyLimited = Class.new StandardError
+      Rulelimit = Class.new StandardError
+      InvalidRequest = Class.new StandardError
+
       def callback_url
         resp = api_client.get "/v3/marketing/busifavor/callbacks?mchid=#{vendor.mch_id}"
 
@@ -25,14 +38,14 @@ module WechatVendorPlatformProxy
         resp = api_client.post \
           "/v3/marketing/busifavor/stocks",
           build_create_stock_json(stock)
+        resp_info = JSON.parse(resp.body)
+        raise ("WechatVendorPlatformProxy::Marketing::BusinessCouponService::#{resp_info["code"].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
 
-        JSON.parse(resp.body).tap do |resp_info|
-          if resp_info["stock_id"].present?
-            stock.update stock_id: resp_info["stock_id"], state: :unaudit
-            BusinessCoupon::StockSyncJob.set(wait: 1.minute).perform_later(stock.id)
-          end
-          set_callback_url(nil) if BusinessCoupon::Stock.where(vendor:).where.not(id: stock.id).exists?
+        if resp_info["stock_id"].present?
+          stock.update stock_id: resp_info["stock_id"], state: :unaudit
+          BusinessCoupon::StockSyncJob.set(wait: 1.minute).perform_later(stock.id)
         end
+        set_callback_url(nil) if BusinessCoupon::Stock.where(vendor:).where.not(id: stock.id).exists?
       end
 
       def update_stock_budget(stock, target_max_coupons: nil, current_max_coupons: nil)
@@ -142,6 +155,7 @@ module WechatVendorPlatformProxy
           )
             .tap { |attrs| attrs.dig("coupon_use_rule", "coupon_available_time")&.slice!("available_begin_time", "available_end_time") }
             .tap { |attrs| attrs["display_pattern_info"]&.slice!("description", "background_color", "coupon_image_url", "prevent_api_abuse") }
+            .tap { |attrs| attrs["display_pattern_info"]&.compact! }
             .to_json
         end
 
