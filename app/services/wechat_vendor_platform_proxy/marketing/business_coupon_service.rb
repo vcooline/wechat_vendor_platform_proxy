@@ -9,7 +9,6 @@ module WechatVendorPlatformProxy
       AppidMchidNotMatch = Class.new StandardError
       MchNotExists = Class.new StandardError
       UserNotExists = Class.new StandardError
-      SystemError = Class.new StandardError
       FrequencyLimited = Class.new StandardError
       Rulelimit = Class.new StandardError
       InvalidRequest = Class.new StandardError
