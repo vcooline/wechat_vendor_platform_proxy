@@ -153,7 +153,7 @@ module WechatVendorPlatformProxy
             stock_type: stock.stock_type.upcase, coupon_code_mode: stock.coupon_code_mode.upcase
           )
             .tap { |attrs| attrs.dig("coupon_use_rule", "coupon_available_time")&.slice!("available_begin_time", "available_end_time") }
-            .tap { |attrs| attrs["display_pattern_info"]&.slice!("description", "background_color", "coupon_image_url", "prevent_api_abuse") }
+            .tap { |attrs| attrs["display_pattern_info"]&.slice!("description", "background_color", "coupon_image_url", "merchant_logo_url", "prevent_api_abuse") }
             .tap { |attrs| attrs["display_pattern_info"]&.compact! }
             .to_json
         end
