@@ -22,7 +22,7 @@ module WechatVendorPlatformProxy
     }, default: :merchant_api
 
     validates_presence_of :out_request_no, :origin_type, :origin_id, :belong_merchant, :stock_type, :coupon_code_mode
-    validates_uniqueness_of :stock_id, :out_request_no
+    validates_uniqueness_of :stock_id, :out_request_no, allow_blank: true
     validates_uniqueness_of :origin_id, scope: :origin_type
 
     before_validation :set_initial_attrs, on: :create
