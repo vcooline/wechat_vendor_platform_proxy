@@ -8,7 +8,7 @@ zh-CN:
       wechat_vendor_platform_proxy/business_coupon/stock: "商家券批次"
       wechat_vendor_platform_proxy/business_coupon/coupon: "商家优惠券"
     attributes:
-      wechat_vendor_platform_proxy/business_coupon/coupon:
+      wechat_vendor_platform_proxy/business_coupon/stock:
         vendor: "微信支付商户"
         belong_merchant: "商户号"
       wechat_vendor_platform_proxy/sub_applyment:
