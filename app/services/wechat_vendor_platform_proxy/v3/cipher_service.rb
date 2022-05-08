@@ -12,7 +12,7 @@ module WechatVendorPlatformProxy
         tag_length = 16
         auth_tag, content = Base64.strict_decode64(ciphertext)
           .then { |text| [text.slice(-tag_length..-1), text.slice(0...-tag_length)] }
-        OpenSSL::Cipher.new("AES-256-GCM")
+        OpenSSL::Cipher.new("aes-256-gcm")
           .decrypt
           .tap { |c| c.key = vendor.v3_key }
           .tap { |c| c.iv = nonce }

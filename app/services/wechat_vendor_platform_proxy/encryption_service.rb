@@ -23,7 +23,7 @@ module WechatVendorPlatformProxy
     end
 
     def decrypt(encrypted_content="")
-      OpenSSL::Cipher.new('AES-256-ECB')
+      OpenSSL::Cipher.new("aes-256-ecb")
         .decrypt
         .tap{ |c| c.padding = 0 }
         .tap{ |c| c.key = Digest::MD5.hexdigest(vendor.sign_key) }
