@@ -60,9 +60,9 @@ module WechatVendorPlatformProxy
       def sync_branch_list
         branches = []
 
-        all_bank_alias_codes.each do |bank_alias_code|
-          province_list["data"].each do |province_info|
-            Array(city_list(province_code: province_info["province_code"])["data"]).each do |city_info|
+        province_list["data"].each do |province_info|
+          Array(city_list(province_code: province_info["province_code"])["data"]).each do |city_info|
+            all_bank_alias_codes.each do |bank_alias_code|
               branches.concat sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
             end
           end
@@ -75,7 +75,7 @@ module WechatVendorPlatformProxy
       private
 
         def all_bank_alias_codes
-          [
+          @all_bank_alias_codes ||= [
             *Capital::PersonalBank.need_bank_branch.pluck(:bank_alias_code),
             *Capital::CorporateBank.need_bank_branch.pluck(:bank_alias_code)
           ].uniq
