@@ -60,7 +60,7 @@ module WechatVendorPlatformProxy
       def sync_branch_list
         branches = []
 
-        province_list["data"].each do |province_info|
+        Array(province_list["data"]).each do |province_info|
           Array(city_list(province_code: province_info["province_code"])["data"]).each do |city_info|
             all_bank_alias_codes.each do |bank_alias_code|
               branches.concat sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
