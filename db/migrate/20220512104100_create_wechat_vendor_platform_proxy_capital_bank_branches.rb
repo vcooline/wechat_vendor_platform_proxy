@@ -5,6 +5,11 @@ class CreateWechatVendorPlatformProxyCapitalBankBranches < ActiveRecord::Migrati
       t.string :bank_branch_name
       t.string :bank_branch_id
 
+      t.string :province_name
+      t.string :province_code
+      t.string :city_name
+      t.string :city_code
+
       t.timestamps
     end
   end

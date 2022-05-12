@@ -63,7 +63,7 @@ module WechatVendorPlatformProxy
         all_bank_alias_codes.each do |bank_alias_code|
           province_list["data"].each do |province_info|
             Array(city_list(province_code: province_info["province_code"])["data"]).each do |city_info|
-              branches.concat sync_city_bank_branches(bank_alias_code:, city_code: city_info["city_code"])
+              branches.concat sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
             end
           end
         end
@@ -81,13 +81,13 @@ module WechatVendorPlatformProxy
           ].uniq
         end
 
-        def sync_city_bank_branches(bank_alias_code:, city_code:)
+        def sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
           branches = []
 
           (1..).each do |page|
-            resp_info = branch_list(bank_alias_code:, city_code:, page:)
+            resp_info = branch_list(bank_alias_code:, city_code: city_info["city_code"], page:)
             Array(resp_info["data"]).each do |branch_info|
-              Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge(bank_alias_code:))
+              Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge({ bank_alias_code: }, province_info, city_info))
                 .then { |b| branches.push(b) }
             end
             break if resp_info.dig("link", "next").blank?

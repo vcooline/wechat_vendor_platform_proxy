@@ -15,8 +15,15 @@
 
 <div>
   <%= search_form_for @q, url: url_for() do |f| %>
+    <%= f.label :province_name_cont, "省份" %>
+    <%= f.search_field :province_name_cont %>
+
+    <%= f.label :city_name_cont, "城市" %>
+    <%= f.search_field :city_name_cont %>
+
     <%= f.label :bank_branch_name_cont, "支行名称" %>
     <%= f.search_field :bank_branch_name_cont %>
+
     <%= f.submit %>
   <% end %>
 
@@ -27,6 +34,8 @@
       <tr>
         <th>开户银行</th>
         <th>银行别名</th>
+        <th><%= sort_link @q, :province_name, "省份" %></th>
+        <th><%= sort_link @q, :city_name, "城市" %></th>
         <th><%= sort_link @q, :bank_branch_name , "开户银行支行名称" %></th>
         <th><%= sort_link @q, :bank_branch_id , "开户银行支行联行号" %></th>
       </tr>
@@ -36,6 +45,8 @@
         <tr>
           <td><%= @bank.account_bank %></td>
           <td><%= @bank.bank_alias %></td>
+          <td><%= branch.province_name %></td>
+          <td><%= branch.city_name %></td>
           <td><%= branch.bank_branch_name%></td>
           <td><%= branch.bank_branch_id %></td>
         </tr>
@@ -45,3 +56,7 @@
 </div>
 
 <%= paginate @branches %>
+
+<br>
+
+<%= link_to "返回银行列表", [@bank.class] %>
