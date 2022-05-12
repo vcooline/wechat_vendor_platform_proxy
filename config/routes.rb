@@ -13,7 +13,11 @@ WechatVendorPlatformProxy::Engine.routes.draw do
   end
 
   namespace :capital do
-    resources :personal_banks, only: [:index]
-    resources :corporate_banks, only: [:index]
+    concern :with_branches do
+      resources :bank_branches, only: [:index]
+    end
+
+    resources :personal_banks, param: :bank_alias_code, only: [:index], concerns: [:with_branches]
+    resources :corporate_banks, param: :bank_alias_code, only: [:index], concerns: [:with_branches]
   end
 end

@@ -1,0 +1,47 @@
+<h1><%= @bank.bank_alias %> - 支行列表</h1>
+
+<style>
+  body { font: normal medium/1.4 sans-serif; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 0.25rem; text-align: left; border: 1px solid #ccc; }
+  tbody tr:nth-child(odd) { background: #eee; }
+  tbody tr:hover { font-weight: bold; }
+
+  table th a { text-decoration: none; }
+
+  .pagination { text-align: center; }
+  .pagination li { display: inline-block; list-style: none; padding: .1rem .5rem;}
+</style>
+
+<div>
+  <%= search_form_for @q, url: url_for() do |f| %>
+    <%= f.label :bank_branch_name_cont, "支行名称" %>
+    <%= f.search_field :bank_branch_name_cont %>
+    <%= f.submit %>
+  <% end %>
+
+  <br>
+
+  <table>
+    <thead>
+      <tr>
+        <th>开户银行</th>
+        <th>银行别名</th>
+        <th><%= sort_link @q, :bank_branch_name , "开户银行支行名称" %></th>
+        <th><%= sort_link @q, :bank_branch_id , "开户银行支行联行号" %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @branches.each do |branch| %>
+        <tr>
+          <td><%= @bank.account_bank %></td>
+          <td><%= @bank.bank_alias %></td>
+          <td><%= branch.bank_branch_name%></td>
+          <td><%= branch.bank_branch_id %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @branches %>

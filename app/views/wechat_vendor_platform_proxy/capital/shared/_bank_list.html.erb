@@ -37,7 +37,14 @@
           <td><%= bank.account_bank_code %></td>
           <td><%= bank.bank_alias %></td>
           <td><%= bank.bank_alias_code %></td>
-          <td><%= bank.need_bank_branch ? "需要" : "不需要" %></td>
+          <td>
+            <% if bank.need_bank_branch %>
+              <%= tag.span "需要" %>
+              <%= link_to "支行列表", [bank, :bank_branches] %>
+            <% else %>
+              <%= tag.span "不需要" %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
