@@ -7,6 +7,7 @@ PATH
       jbuilder
       kaminari
       rails (>= 6.1)
+      ransack
 
 GEM
   remote: https://rubygems.org/
@@ -169,6 +170,10 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    ransack (3.1.0)
+      activerecord (>= 6.0.4)
+      activesupport (>= 6.0.4)
+      i18n
     ruby2_keywords (0.0.5)
     sassc (2.4.0)
       ffi (~> 1.9)

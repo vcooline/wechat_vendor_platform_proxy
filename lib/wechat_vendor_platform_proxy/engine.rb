@@ -1,4 +1,5 @@
 require "kaminari"
+require "ransack"
 require "jbuilder"
 require "faraday"
 require "faraday/multipart"
