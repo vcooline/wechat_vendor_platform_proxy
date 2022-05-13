@@ -58,17 +58,29 @@ module WechatVendorPlatformProxy
       end
 
       def sync_branch_list
-        branches = []
+        Capital::BankBranch.where.not(bank_alias_code: all_bank_alias_codes).destroy_all
 
         Array(province_list["data"]).each do |province_info|
           Array(city_list(province_code: province_info["province_code"])["data"]).each do |city_info|
             all_bank_alias_codes.each do |bank_alias_code|
-              branches.concat sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
+              BankBranchesSyncJob.perform_later(vendor.id, bank_alias_code:, province_info:, city_info:)
             end
           end
         end
 
-        Capital::BankBranch.where.not(id: branches.map(&:id)).destroy_all
+        all_bank_alias_codes.size
+      end
+
+      def sync_bank_branches(bank_alias_code:, province_info:, city_info:)
+        branches = []
+
+        (1..).each do |page|
+          paged_result = sync_paged_bank_branches(bank_alias_code:, province_info:, city_info:, page:)
+          branches.concat paged_result["branches"]
+          break if paged_result.dig("link", "next").blank?
+        end
+
+        Capital::BankBranch.where(bank_alias_code:, city_code: city_info["city_code"]).where.not(id: branches.map(&:id)).destroy_all
         branches.size
       end
 
@@ -81,19 +93,16 @@ module WechatVendorPlatformProxy
           ].uniq
         end
 
-        def sync_city_bank_branches(bank_alias_code:, province_info:, city_info:)
+        def sync_paged_bank_branches(bank_alias_code:, province_info:, city_info:, page:)
           branches = []
 
-          (1..).each do |page|
-            resp_info = branch_list(bank_alias_code:, city_code: city_info["city_code"], page:)
-            Array(resp_info["data"]).each do |branch_info|
-              Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge({ bank_alias_code: }, province_info, city_info))
-                .then { |b| branches.push(b) }
-            end
-            break if resp_info.dig("link", "next").blank?
+          resp_info = branch_list(bank_alias_code:, city_code: city_info["city_code"], page:)
+          Array(resp_info["data"]).each do |branch_info|
+            Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge({ bank_alias_code: }, province_info, city_info))
+              .then { |b| branches.push(b) }
           end
 
-          branches
+          resp_info.slice("link").merge("branches" => branches)
         end
     end
   end
