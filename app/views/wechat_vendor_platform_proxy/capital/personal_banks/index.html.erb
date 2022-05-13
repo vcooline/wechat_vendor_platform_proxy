@@ -1,3 +1,6 @@
-<h1>支持个人业务的银行列表</h1>
+<% "支持个人业务的银行列表".then do |title| %>
+  <% content_for :title, title %>
+  <%= tag.h1 title %>
+<% end %>
 
 <%= render "wechat_vendor_platform_proxy/capital/shared/bank_list", q: @q, banks: @banks %>

@@ -1,4 +1,7 @@
-<h1><%= @bank.bank_alias %> - 支行列表</h1>
+<% "#{@bank.bank_alias} - 支行列表".then do |title| %>
+  <% content_for :title, title %>
+  <%= tag.h1 title %>
+<% end %>
 
 <style>
   body { font: normal medium/1.4 sans-serif; }

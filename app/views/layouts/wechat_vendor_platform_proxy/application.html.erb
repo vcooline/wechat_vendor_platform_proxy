@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Wechat vendor platform proxy</title>
+    <title><%= content_for?(:title) ? yield(:title) : "Wechat vendor platform proxy" %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
   </head>
