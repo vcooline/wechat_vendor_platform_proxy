@@ -1,18 +1,27 @@
 module WechatVendorPlatformProxy
   module V3
     class CipherService < VendorBaseService
-      def encrypt(original_text)
+      def platform_encrypt(original_text)
         OpenSSL::X509::Certificate.new(vendor.latest_platform_certficate.cert)
           .public_key
           .public_encrypt(original_text, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
           .then { |c| Base64.strict_encode64(c) }
       end
+      alias_method :encrypt, :platform_encrypt
 
-      def decrypt(original_text, cert_serial_no:)
+      def api_client_encrypt(original_text)
+        OpenSSL::X509::Certificate.new(vendor.latest_api_client_certificate.cert)
+          .public_key
+          .public_encrypt(original_text, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
+          .then { |c| Base64.strict_encode64(c) }
+      end
+
+      def api_client_decrypt(original_text, cert_serial_no: vendor.latest_api_client_certificate&.serial_no)
         vendor.api_client_certificates.find_by(serial_no: cert_serial_no)
           .then { |certificate| OpenSSL::PKey::RSA.new(certificate&.key) }
-          .then { |rsa_private| rsa_private.private_decrypt Base65.strict_decode64(original_text) }
+          .then { |rsa_private| rsa_private.private_decrypt(Base64.strict_decode64(original_text), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING) }
       end
+      alias_method :decrypt, :api_client_decrypt
 
       def decrypt_params(ciphertext:, nonce:, associated_data:)
         tag_length = 16
