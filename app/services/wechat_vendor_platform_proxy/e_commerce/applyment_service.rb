@@ -61,12 +61,12 @@ module WechatVendorPlatformProxy
 
     def build_api_json(applyment)
       applyment.slice(
-        :out_request_no, :merchant_shortname,
-        :business_license_info, :id_card_info, :account_info, :contact_info, :sales_scene_info,
-        :converted_qualifications, :converted_business_addition_pics,
-        :business_addition_desc
+        :out_request_no, :merchant_shortname, :business_addition_desc,
+        :business_license_info, :id_card_info, :account_info, :contact_info, :sales_scene_info
       )
         .tap { |h| h.merge!(organization_type: applyment.organization_type_before_type_cast.to_s) }
+        .tap { |h| h.merge!({ qualifications: applyment.converted_qualifications }.compact_blank) }
+        .tap { |h| h.merge!({ business_addition_pics: applyment.converted_business_addition_pics }.compact_blank) }
         .tap { |h| h.delete(:business_license_info) if applyment.organization_type.in?(%w[micro seller]) }
         .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
         .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
