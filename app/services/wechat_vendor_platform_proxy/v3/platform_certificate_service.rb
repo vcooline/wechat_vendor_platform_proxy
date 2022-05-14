@@ -9,7 +9,7 @@ module WechatVendorPlatformProxy
         raise SignError, resp_info["message"] if resp_info["code"].eql?("SIGN_ERROR")
 
         resp_info["data"].map do |cert_info|
-          cert_info["cert"] = cipher.decrypt(**cert_info["encrypt_certificate"].slice("ciphertext", "nonce", "associated_data").symbolize_keys) if decrypt
+          cert_info["cert"] = cipher.decrypt_params(**cert_info["encrypt_certificate"].slice("ciphertext", "nonce", "associated_data").symbolize_keys) if decrypt
           cert_info
         end
       end

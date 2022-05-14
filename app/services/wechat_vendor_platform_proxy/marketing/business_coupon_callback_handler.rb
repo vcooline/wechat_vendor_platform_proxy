@@ -2,7 +2,7 @@ module WechatVendorPlatformProxy
   module Marketing
     class BusinessCouponCallbackHandler < V3::ApiBaseService
       def perform(event_params)
-        resource_params = JSON.parse cipher.decrypt(**event_params["resource"].slice("ciphertext", "nonce", "associated_data").symbolize_keys)
+        resource_params = JSON.parse cipher.decrypt_params(**event_params["resource"].slice("ciphertext", "nonce", "associated_data").symbolize_keys)
 
         case event_params["event_type"]
         when "COUPON.SEND"
