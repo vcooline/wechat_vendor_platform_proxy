@@ -38,8 +38,8 @@ module WechatVendorPlatformProxy
         self.account_info ||= {}
         self.contact_info ||= {}
         self.sales_scene_info ||= {}
-        self.qualifications ||= []
-        self.business_addition_pics ||= []
+        self.qualifications ||= {}
+        self.business_addition_pics ||= {}
       end
   end
 end

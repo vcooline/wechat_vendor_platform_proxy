@@ -39,3 +39,27 @@ zh-CN:
       wechat_vendor_platform_proxy/sub_applyment/business_info:
         merchant_shortname: "商户简称"
         service_phone: "客服电话"
+      wechat_vendor_platform_proxy/e_commerce/applyment/account_validation:
+        account_name: "付款户名"
+        account_no: "付款卡号"
+        pay_amount: "汇款金额"
+        destination_account_number: "收款卡号"
+        destination_account_name: "收款户名"
+        destination_account_bank: "开户银行"
+        city: "省市信息"
+        remark: "备注信息"
+        deadline: "汇款截止时间"
+      wechat_vendor_platform_proxy/e_commerce/applyment/state:
+        ready: "已创建"
+        checking: "资料校验中"
+        account_need_verify: "待账户验证"
+        auditing: "审核中"
+        rejected: "已驳回"
+        need_sign: "待签约"
+        finish: "完成"
+        frozen: "已冻结"
+        canceled: "已作废"
+      wechat_vendor_platform_proxy/e_commerce/applyment/sign_state:
+        unsigned: "未签约"
+        signed: "已签约"
+        not_signable: "不可签约"
