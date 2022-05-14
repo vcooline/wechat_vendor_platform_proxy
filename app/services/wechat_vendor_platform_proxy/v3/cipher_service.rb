@@ -8,7 +8,10 @@ module WechatVendorPlatformProxy
           .then { |c| Base64.strict_encode64(c) }
       end
 
-      def decrypt(ciphertext:, nonce:, associated_data:)
+      def decrypt2(original_text, cert_serial_no:)
+      end
+
+      def decrypt(ciphertext:, nonce:, associated_data:) # decrypt_params
         tag_length = 16
         auth_tag, content = Base64.strict_decode64(ciphertext)
           .then { |text| [text.slice(-tag_length..-1), text.slice(0...-tag_length)] }

@@ -29,6 +29,14 @@ module WechatVendorPlatformProxy
 
     before_validation :set_initial_attrs, on: :create
 
+    def converted_qualifications
+      Array(qualifications["media_ids"])
+    end
+
+    def converted_business_addition_pics
+      Array(business_addition_pics["media_ids"])
+    end
+
     private
 
       def set_initial_attrs
