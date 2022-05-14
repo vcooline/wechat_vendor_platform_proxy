@@ -57,6 +57,21 @@ module WechatVendorPlatformProxy
     end
 
     def query(applyment)
+      resp = api_client.get "/v3/ecommerce/applyments/#{applyment.applyment_id}"
+
+      JSON.parse(resp.body).tap do |resp_info|
+        break resp_info unless resp.success?
+
+        applyment.update \
+          resp_info.slice(
+            *%w[sign_url legal_validation_url account_validation audit_detail]
+          ).merge(
+            state: resp_info["applyment_state"].downcase,
+            state_desc: resp_info["applyment_state_desc"],
+            sign_state: resp_info["sign_state"].downcase,
+            sub_mch_id: resp_info["sub_mchid"]
+          )
+      end
     end
 
     def build_api_json(applyment)
