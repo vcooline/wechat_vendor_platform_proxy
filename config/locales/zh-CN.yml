@@ -49,6 +49,22 @@ zh-CN:
         city: "省市信息"
         remark: "备注信息"
         deadline: "汇款截止时间"
+      wechat_vendor_platform_proxy/e_commerce/applyment:
+        organization_type: "主体类型"
+        contact_info: "超级管理员信息"
+        account_info: "结算账户信息"
+      wechat_vendor_platform_proxy/e_commerce/applyment/organization_type:
+        micro: "小微商户"
+        seller: "个人卖家"
+        individual: "个体工商户"
+        enterprise: "企业"
+        goverment: "政府机关"
+        institution: "事业单位"
+        others: "社会组织"
+      wechat_vendor_platform_proxy/e_commerce/applyment/contact_info:
+        contact_name: "超级管理员姓名"
+      wechat_vendor_platform_proxy/e_commerce/applyment/account_info:
+        account_number: "银行账号"
       wechat_vendor_platform_proxy/e_commerce/applyment/state:
         ready: "已创建"
         checking: "资料校验中"
