@@ -51,6 +51,7 @@ zh-CN:
         deadline: "汇款截止时间"
       wechat_vendor_platform_proxy/e_commerce/applyment:
         organization_type: "主体类型"
+        merchant_shortname: "商户简称"
         contact_info: "超级管理员信息"
         account_info: "结算账户信息"
       wechat_vendor_platform_proxy/e_commerce/applyment/organization_type:
@@ -79,3 +80,7 @@ zh-CN:
         unsigned: "未签约"
         signed: "已签约"
         not_signable: "不可签约"
+      wechat_vendor_platform_proxy/e_commerce/applyment/business_license_info:
+        merchant_name: "商户名称"
+      wechat_vendor_platform_proxy/e_commerce/applyment/sales_scene_info:
+        store_name: "店铺名称"
