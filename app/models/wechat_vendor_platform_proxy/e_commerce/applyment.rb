@@ -1,6 +1,7 @@
 module WechatVendorPlatformProxy
   class ECommerce::Applyment < ApplicationRecord
     belongs_to :owner, polymorphic: true
+    has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
 
     enum :state, {
       ready: 0,

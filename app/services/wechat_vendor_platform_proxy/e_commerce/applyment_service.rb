@@ -49,10 +49,9 @@ module WechatVendorPlatformProxy
         "/v3/ecommerce/applyments/",
         build_api_json(applyment),
         extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
-      resp_info = JSON.parse(resp.body)
 
-      resp_info["applyment_id"]&.then do |applyment_id|
-        applyment.update(applyment_id:)
+      JSON.parse(resp.body).tap do |resp_info|
+        applyment.update(applyment_id: resp_info["applyment_id"])
       end
     end
 

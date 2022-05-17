@@ -1,6 +1,7 @@
 module WechatVendorPlatformProxy
   class SubApplyment < ApplicationRecord
     belongs_to :owner, polymorphic: true
+    has_one :settlement_account, primary_key: :sub_mch_id, foreign_key: :sub_mch_id
 
     enum :state, {
       ready: 0,
@@ -17,6 +18,17 @@ module WechatVendorPlatformProxy
     validates :business_code, presence: true, uniqueness: true
 
     before_validation :set_initial_attrs, on: :create
+
+    def organization_type
+      {
+        "SUBJECT_TYPE_MICRO" => "micro",
+        "SUBJECT_TYPE_INDIVIDUAL" => "individual",
+        "SUBJECT_TYPE_ENTERPRISE" => "enterprise",
+        "SUBJECT_TYPE_GOVERNMENT" => "government",
+        "SUBJECT_TYPE_INSTITUTIONS" => "institution",
+        "SUBJECT_TYPE_OTHERS" => "others"
+      }[subject_info&.dig("subject_type")]
+    end
 
     private
 

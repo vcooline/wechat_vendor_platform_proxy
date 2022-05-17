@@ -39,6 +39,24 @@ zh-CN:
       wechat_vendor_platform_proxy/sub_applyment/business_info:
         merchant_shortname: "商户简称"
         service_phone: "客服电话"
+      wechat_vendor_platform_proxy/settlement_account:
+        account_type: "账户类型"
+        account_bank: "开户银行"
+        bank_name: "开户银行全称（含支行）"
+        bank_branch_id: "开户银行联行号"
+        account_number: "银行账号"
+        verify_result: "汇款验证结果"
+        verify_fail_reason: "汇款验证失败原因"
+        state: "账户修改状态"
+      wechat_vendor_platform_proxy/settlement_account/state:
+        ready: "未提交"
+        submitted: "已提交"
+        success: "已完成"
+      wechat_vendor_platform_proxy/settlement_account/verify_result:
+        none: "未验证"
+        VERIFYING: "系统汇款验证中"
+        VERIFY_SUCCESS: "系统成功汇款"
+        VERIFY_FAIL: "系统汇款失败"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_validation:
         account_name: "付款户名"
         account_no: "付款卡号"
@@ -59,12 +77,13 @@ zh-CN:
         seller: "个人卖家"
         individual: "个体工商户"
         enterprise: "企业"
-        goverment: "政府机关"
+        government: "政府机关"
         institution: "事业单位"
         others: "社会组织"
       wechat_vendor_platform_proxy/e_commerce/applyment/contact_info:
         contact_name: "超级管理员姓名"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_info:
+        account_bank: "开户银行"
         account_number: "银行账号"
       wechat_vendor_platform_proxy/e_commerce/applyment/state:
         ready: "已创建"
