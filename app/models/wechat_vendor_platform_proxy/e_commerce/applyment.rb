@@ -5,6 +5,7 @@ module WechatVendorPlatformProxy
 
     enum :state, {
       ready: 0,
+      submitted: 3,
       checking: 10,
       account_need_verify: 20,
       auditing: 30,

@@ -51,7 +51,7 @@ module WechatVendorPlatformProxy
         extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
 
       JSON.parse(resp.body).tap do |resp_info|
-        applyment.update(applyment_id: resp_info["applyment_id"])
+        applyment.update(applyment_id: resp_info["applyment_id"], state: :submitted) if resp_info["applyment_id"].present?
       end
     end
 
@@ -61,15 +61,15 @@ module WechatVendorPlatformProxy
       JSON.parse(resp.body).tap do |resp_info|
         break resp_info unless resp.success?
 
-        applyment.update \
-          resp_info.slice(
-            *%w[sign_url legal_validation_url account_validation audit_detail]
-          ).merge(
-            state: resp_info["applyment_state"].downcase,
-            state_desc: resp_info["applyment_state_desc"],
-            sign_state: resp_info["sign_state"].downcase,
-            sub_mch_id: resp_info["sub_mchid"]
-          )
+        update_attrs = resp_info.slice(*%w[sign_url legal_validation_url account_validation audit_detail])
+          .merge(state: resp_info["applyment_state"].downcase, state_desc: resp_info["applyment_state_desc"], sign_state: resp_info["sign_state"].downcase, sub_mch_id: resp_info["sub_mchid"])
+          .tap do |attrs|
+            break attrs unless attrs["account_validation"].present?
+
+            attrs["account_validation"]["account_name"] = cipher.decrypt(attrs["account_validation"]["account_name"])
+            attrs["account_validation"]["account_no"].presence&.then { |account_no| attrs["account_validation"]["account_no"] = cipher.decrypt(account_no) }
+          end
+        applyment.update update_attrs
       end
     end
 

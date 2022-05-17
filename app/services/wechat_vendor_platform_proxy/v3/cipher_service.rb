@@ -20,6 +20,7 @@ module WechatVendorPlatformProxy
         vendor.api_client_certificates.find_by(serial_no: cert_serial_no)
           .then { |certificate| OpenSSL::PKey::RSA.new(certificate&.key) }
           .then { |rsa_private| rsa_private.private_decrypt(Base64.strict_decode64(original_text), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING) }
+          .then { |text| text.force_encoding('utf-8') }
       end
       alias_method :decrypt, :api_client_decrypt
 
