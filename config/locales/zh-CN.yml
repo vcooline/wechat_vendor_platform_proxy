@@ -57,6 +57,12 @@ zh-CN:
         VERIFYING: "系统汇款验证中"
         VERIFY_SUCCESS: "系统成功汇款"
         VERIFY_FAIL: "系统汇款失败"
+      wechat_vendor_platform_proxy/e_commerce/applyment:
+        sub_mch_id: "商户号"
+        organization_type: "主体类型"
+        merchant_shortname: "商户简称"
+        contact_info: "超级管理员信息"
+        account_info: "结算账户信息"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_validation:
         account_name: "付款户名"
         account_no: "付款卡号"
@@ -67,11 +73,6 @@ zh-CN:
         city: "省市信息"
         remark: "备注信息"
         deadline: "汇款截止时间"
-      wechat_vendor_platform_proxy/e_commerce/applyment:
-        organization_type: "主体类型"
-        merchant_shortname: "商户简称"
-        contact_info: "超级管理员信息"
-        account_info: "结算账户信息"
       wechat_vendor_platform_proxy/e_commerce/applyment/organization_type:
         micro: "小微商户"
         seller: "个人卖家"
