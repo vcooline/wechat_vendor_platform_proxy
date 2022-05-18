@@ -38,7 +38,7 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/stocks",
           build_create_stock_json(stock)
         resp_info = JSON.parse(resp.body)
-        raise ("WechatVendorPlatformProxy::Marketing::BusinessCouponService::#{resp_info["code"].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
+        raise ("WechatVendorPlatformProxy::Marketing::BusinessCouponService::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
 
         if resp_info["stock_id"].present?
           stock.update stock_id: resp_info["stock_id"], state: :unaudit
