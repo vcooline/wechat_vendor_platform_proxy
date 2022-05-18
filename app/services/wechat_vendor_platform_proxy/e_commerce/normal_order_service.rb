@@ -24,8 +24,8 @@ module WechatVendorPlatformProxy
     end
 
     class << self
-      def perform(order_params = {})
-        new(detect_vendor(order_params[:sp_mch_id])).perform(order_params)
+      def invoke(method_name, order_params = {})
+        new(detect_vendor(order_params[:sp_mch_id])).public_send(method_name, order_params)
       end
 
       def verify_notification_sign(notification_params = {})
@@ -54,8 +54,7 @@ module WechatVendorPlatformProxy
     #     settle_info: { profit_sharing: true|false, subsidy_amount: 0 }, # optional
     #     amount: { total: 0, currency: "CNY" },
     #     payer: { sp_openid: "", sub_openid: ""}, # sp_openid, sub_openid must have one
-    #     detail: { cost_price: "", invoice_id: "" }, # optional
-    #     goods_detail: [{merchant_goods_id: "", goods_name: "", quantity: 0, unit_price: 0 }, {...}, ...], # optional
+    #     detail: { cost_price: "", invoice_id: "", goods_detail: [] }, # optional
     #     scene_info: { payer_client_ip: "", device_id: "", store_info: { id: "", name: "", area_code: "", address: "" } } # optional
     #   }
     %i[jsapi].each do |order_type|
