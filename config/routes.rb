@@ -20,4 +20,6 @@ WechatVendorPlatformProxy::Engine.routes.draw do
     resources :personal_banks, param: :bank_alias_code, only: [:index], concerns: [:with_branches]
     resources :corporate_banks, param: :bank_alias_code, only: [:index], concerns: [:with_branches]
   end
+
+  get ':wechat_vendor_platform_verify_file', to: "welcome#verify_file", constraints: { wechat_vendor_platform_verify_file: /WXPAY_verify_.+\.txt/ }
 end
