@@ -1,6 +1,12 @@
 module WechatVendorPlatformProxy
   module V3
     class CipherService < VendorBaseService
+      def self.decrypt_params(serial_no, ...)
+        PlatformCertificate.find_by!(serial_no:).vendor.then do |vendor|
+          new(vendor).decrypt_params(...)
+        end
+      end
+
       def platform_encrypt(original_text)
         OpenSSL::X509::Certificate.new(vendor.latest_platform_certficate.cert)
           .public_key
