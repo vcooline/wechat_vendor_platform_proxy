@@ -16,6 +16,12 @@ module WechatVendorPlatformProxy
       def media_service
         @media_service ||= MediaService.new(vendor)
       end
+
+      private
+
+        def handle_api_error(resp_info)
+          raise ("#{self.class.name}::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError), resp_info["message"]
+        end
     end
   end
 end
