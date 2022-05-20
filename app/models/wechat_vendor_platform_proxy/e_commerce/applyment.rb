@@ -2,6 +2,7 @@ module WechatVendorPlatformProxy
   class ECommerce::Applyment < ApplicationRecord
     belongs_to :owner, polymorphic: true
     has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
+    has_one :vendor, class_name: "WechatVendorPlatformProxy::ECommerce::Vendor", foreign_key: :sub_mch_id, primary_key: :sub_mch_id
 
     enum :state, {
       ready: 0,
@@ -30,6 +31,7 @@ module WechatVendorPlatformProxy
     validates :out_request_no, presence: true, uniqueness: true
 
     before_validation :set_initial_attrs, on: :create
+    after_commit :sync_vendor, on: :update
 
     def converted_qualifications
       Array(qualifications["media_ids"])
@@ -50,6 +52,12 @@ module WechatVendorPlatformProxy
         self.sales_scene_info ||= {}
         self.qualifications ||= {}
         self.business_addition_pics ||= {}
+      end
+
+      def sync_vendor
+        return unless self.finish? && self.sub_mch_id.present?
+
+        WechatVendorPlatformProxy::ECommerce::Vendor.find_or_create_by(sub_mch_id:)
       end
   end
 end
