@@ -61,5 +61,17 @@ module WechatVendorPlatformProxy
         end
       end
     end
+
+    def build_jsapi_config(order_params = {})
+      unified_order = build_jsapi_order(order_params)
+
+      {
+        appId: (order_params[:sp_appid].presence || order_params[:sub_appid]),
+        timeStamp: Time.now.to_i.to_s,
+        nonceStr: SecureRandom.hex,
+        package: "prepay_id=#{unified_order['prepay_id']}",
+        signType: "RSA"
+      }.then { |config| config.merge(paySign: signer.sign(*config.values_at(:appId, :timeStamp, :nonceStr, :package))) }
+    end
   end
 end
