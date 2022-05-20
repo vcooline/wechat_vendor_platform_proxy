@@ -19,10 +19,10 @@ module WechatVendorPlatformProxy
 
     before_validation :set_initial_attrs, :sync_stock_attrs, on: :create
 
-    delegate :belong_merchant, :vendor, to: :stock
+    delegate :belong_merchant, :vendor, :sp_vendor, to: :stock
 
     def to_receive_url
-      Marketing::BusinessCouponService.new(vendor).receive_coupon_url(self)
+      Marketing::BusinessCouponService.new(sp_vendor).receive_coupon_url(self)
     end
 
     private

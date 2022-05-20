@@ -38,13 +38,13 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/stocks",
           build_create_stock_json(stock)
         resp_info = JSON.parse(resp.body)
-        raise ("WechatVendorPlatformProxy::Marketing::BusinessCouponService::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
+        handle_api_error(resp_info) unless resp.success?
 
         if resp_info["stock_id"].present?
           stock.update stock_id: resp_info["stock_id"], state: :unaudit
           BusinessCoupon::StockSyncJob.set(wait: 1.minute).perform_later(stock.id)
         end
-        set_callback_url(nil) if BusinessCoupon::Stock.where(vendor:).where.not(id: stock.id).exists?
+        set_callback_url(nil) if BusinessCoupon::Stock.where(belong_merchant: stock.belong_merchant).where.not(id: stock.id).empty?
       end
 
       def update_stock_budget(stock, target_max_coupons: nil, current_max_coupons: nil)

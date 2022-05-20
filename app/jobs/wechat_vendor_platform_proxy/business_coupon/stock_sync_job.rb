@@ -4,7 +4,7 @@ module WechatVendorPlatformProxy
 
     def perform(stock_id)
       BusinessCoupon::Stock.find_by(id: stock_id)&.then do |stock|
-        Marketing::BusinessCouponService.new(stock.vendor).sync_stock(stock)
+        Marketing::BusinessCouponService.new(stock.sp_vendor).sync_stock(stock)
       end
     end
   end

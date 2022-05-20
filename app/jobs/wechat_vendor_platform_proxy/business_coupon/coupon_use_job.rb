@@ -4,7 +4,7 @@ module WechatVendorPlatformProxy
 
     def perform(coupon_id)
       BusinessCoupon::Coupon.find_by(id: coupon_id)&.then do |coupon|
-        Marketing::BusinessCouponService.new(coupon.vendor).use_coupon(coupon)
+        Marketing::BusinessCouponService.new(coupon.sp_vendor).use_coupon(coupon)
       end
     end
   end
