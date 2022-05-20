@@ -3,7 +3,7 @@ module WechatVendorPlatformProxy
     include BusinessCoupon::StockTypeEnum
 
     belongs_to :origin, polymorphic: true
-    belongs_to :vendor, foreign_key: :belong_merchant, primary_key: :mch_id
+    belongs_to :vendor, class_name: "WechatVendorPlatformProxy::Vendor", foreign_key: :belong_merchant, primary_key: :mch_id
 
     has_many :coupons, foreign_key: :stock_id, primary_key: :stock_id
 
@@ -26,6 +26,10 @@ module WechatVendorPlatformProxy
     validates_uniqueness_of :origin_id, scope: :origin_type
 
     before_validation :set_initial_attrs, on: :create
+
+    def sp_vendor
+      vendor.sp_vendor
+    end
 
     private
 

@@ -2,7 +2,7 @@ module WechatVendorPlatformProxy
   class ECommerce::Applyment < ApplicationRecord
     belongs_to :owner, polymorphic: true
     has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
-    has_one :vendor, class_name: "WechatVendorPlatformProxy::ECommerce::Vendor", foreign_key: :sub_mch_id, primary_key: :sub_mch_id
+    has_one :vendor, class_name: "WechatVendorPlatformProxy::Vendor", foreign_key: :mch_id, primary_key: :sub_mch_id
 
     enum :state, {
       ready: 0,
@@ -57,7 +57,7 @@ module WechatVendorPlatformProxy
       def sync_vendor
         return unless self.finish? && self.sub_mch_id.present?
 
-        WechatVendorPlatformProxy::ECommerce::Vendor.find_or_create_by(sub_mch_id:)
+        WechatVendorPlatformProxy::Vendor.ecommerce_vendor.find_or_create_by(mch_id: sub_mch_id)
       end
   end
 end
