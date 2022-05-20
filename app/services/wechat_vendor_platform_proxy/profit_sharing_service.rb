@@ -7,7 +7,7 @@ module WechatVendorPlatformProxy
     attr_reader :vendor
 
     class << self
-      def perform(profit_sharing_params={})
+      def call(profit_sharing_params={})
         raise "Not implemented"
       end
 
