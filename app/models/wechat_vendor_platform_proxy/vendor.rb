@@ -49,7 +49,7 @@ module WechatVendorPlatformProxy
     private
 
       def set_initial_attrs
-        self.sp_mch_id = ecommerce_applyment&.owner&.wechat_sp_vendor&.mch_id if ecommerce_vendor?
+        self.sp_mch_id ||= ecommerce_applyment&.owner&.wechat_sp_vendor&.mch_id if ecommerce_vendor?
       end
 
       def trigger_platform_certificate_sync
