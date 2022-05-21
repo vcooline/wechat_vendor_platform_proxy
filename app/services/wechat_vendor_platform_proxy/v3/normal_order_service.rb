@@ -64,7 +64,7 @@ module WechatVendorPlatformProxy
       unified_order = build_jsapi_order(order_params)
 
       {
-        appId: (order_params[:sp_appid].presence || order_params[:sub_appid]),
+        appId: order_params[:appid].presence,
         timeStamp: Time.now.to_i.to_s,
         nonceStr: SecureRandom.hex,
         package: "prepay_id=#{unified_order['prepay_id']}",
