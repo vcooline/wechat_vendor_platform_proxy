@@ -28,6 +28,7 @@ module WechatVendorPlatformProxy
             url: API_GATEWAY,
             headers: {
               "Content-Type": "application/json",
+              "Accept-Encoding": "*",
               Accept: "application/json",
               Authorization: SignatureService.new(vendor).build_authorization_header(http_method, fullpath, payload)
             }.merge(extra_headers).compact
