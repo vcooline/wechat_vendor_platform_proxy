@@ -86,7 +86,7 @@ module WechatVendorPlatformProxy
         query_params = {
           stock_id: coupon.stock_id,
           out_request_no: "#{coupon.stock.belong_merchant}#{coupon.created_at.strftime('%Y%m%d%H%M%S')}#{coupon.id}",
-          send_coupon_merchant: coupon.stock.belong_merchant,
+          send_coupon_merchant: vendor.mch_id,
           open_id: coupon.open_id,
           coupon_code: coupon.code
         }.tap { |q| q[:sign] = v2_sign(q.slice(:stock_id, :out_request_no, :send_coupon_merchant, :open_id, :coupon_code)) }
