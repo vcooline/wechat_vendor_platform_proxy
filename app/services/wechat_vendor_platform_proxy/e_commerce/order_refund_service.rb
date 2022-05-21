@@ -31,7 +31,7 @@ module WechatVendorPlatformProxy
     # order_params example(jsapi):
     # {
     #   sp_appid: "",
-    #   sub_mchid: "",
+    #   sp_mchid: "",
     #   sub_appid: "", # optional
     #   sub_mchid: "",
     #   out_trade_no|transaction_id: "",
@@ -48,10 +48,11 @@ module WechatVendorPlatformProxy
     end
 
     def query(sub_mch_id:, out_refund_no: nil, refund_id: nil)
+      query_params = { sub_mchid: sub_mch_id }.to_query
       resp = if out_refund_no.present?
-               api_client.get "/v3/ecommerce/refunds/out-refund-no/#{out_refund_no}", { sub_mchid: sub_mch_id }.to_json
+               api_client.get "/v3/ecommerce/refunds/out-refund-no/#{out_refund_no}?#{query_params}"
              else
-               api_client.get "/v3/ecommerce/refunds/id/#{refund_id}", { sub_mchid: }.to_json
+               api_client.get "/v3/ecommerce/refunds/id/#{refund_id}?#{query_params}"
              end
       JSON.parse(resp.body).tap do |resp_info|
         handle_api_error(resp_info) unless resp.success?
