@@ -3,6 +3,7 @@ module WechatVendorPlatformProxy
     ORIGINAL_FIELD_KEYS = [
       %w[id_card_info original_id_card_name],
       %w[id_card_info original_id_card_number],
+      %w[id_card_info original_id_card_address],
       %w[account_info original_account_name],
       %w[account_info original_account_number],
       %w[contact_info original_contact_name],
@@ -84,7 +85,6 @@ module WechatVendorPlatformProxy
         .tap { |h| h.delete(:business_license_info) if applyment.organization_type.in?(%w[micro seller]) }
         .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
         .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
-        .tap { |h| h.merge!(need_account_info: true) }
         .tap { |h| h.merge!(owner: true) if applyment.enterprise? }
         .to_json
     end
