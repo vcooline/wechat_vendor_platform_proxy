@@ -1,0 +1,6 @@
+class CleanForeignKeyConstraints < ActiveRecord::Migration[7.0]
+  def change
+    remove_foreign_key :wxpay_api_client_certificates, to_table: :wxpay_vendors, column: :vendor_id
+    remove_foreign_key :wxpay_platform_certificates, to_table: :wxpay_vendors, column: :vendor_id
+  end
+end

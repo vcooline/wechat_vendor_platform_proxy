@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_17_025105) do
+ActiveRecord::Schema[7.0].define(version: 2099_11_17_054718) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -232,6 +232,4 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_17_025105) do
     t.index ["name"], name: "index_wxpay_verify_files_on_name", unique: true
   end
 
-  add_foreign_key "wxpay_api_client_certificates", "wxpay_vendors", column: "vendor_id"
-  add_foreign_key "wxpay_platform_certificates", "wxpay_vendors", column: "vendor_id"
 end
