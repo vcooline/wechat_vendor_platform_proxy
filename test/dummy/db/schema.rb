@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_20_031013) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_17_025105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -157,6 +157,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_20_031013) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["vendor_id"], name: "index_wxpay_platform_certificates_on_vendor_id"
+  end
+
+  create_table "wxpay_profit_sharing_receivers", force: :cascade do |t|
+    t.bigint "vendor_id"
+    t.string "app_id"
+    t.integer "account_type"
+    t.string "account"
+    t.string "name"
+    t.integer "relation_type"
+    t.string "custom_relation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account", "vendor_id", "app_id"], name: "index_wxpay_profit_sharing_receivers_on_vendor_app_account", unique: true
+    t.index ["vendor_id"], name: "index_wxpay_profit_sharing_receivers_on_vendor_id"
   end
 
   create_table "wxpay_settlement_accounts", force: :cascade do |t|

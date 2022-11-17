@@ -22,7 +22,7 @@ module WechatVendorPlatformProxy
       g.stylesheets     false
       g.javascripts     false
       g.helper          false
-      g.test_framework  nil
+      g.test_framework  :test_unit
       g.skip_routes     true
     end
   end

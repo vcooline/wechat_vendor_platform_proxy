@@ -1,0 +1,6 @@
+one:
+  vendor: one
+  app_id: "wx0000000000000001"
+  account_type: "personal_openid"
+  account: "FILLER_000000000000000000001"
+  relation_type: "user"

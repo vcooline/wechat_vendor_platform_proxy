@@ -11,6 +11,7 @@ module WechatVendorPlatformProxy
 
     has_many :api_client_certificates, dependent: :destroy
     has_many :platform_certificates, dependent: :destroy
+    has_many :profit_sharing_receivers, dependent: nil
 
     has_one :latest_api_client_certificate, -> { order(effective_at: :desc, id: :desc) }, class_name: "WechatVendorPlatformProxy::ApiClientCertificate"
     has_one :latest_platform_certficate, -> { order(effective_at: :desc, id: :desc) }, class_name: "WechatVendorPlatformProxy::PlatformCertificate"

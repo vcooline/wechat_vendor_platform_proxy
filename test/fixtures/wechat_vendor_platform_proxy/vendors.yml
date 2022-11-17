@@ -1,0 +1,6 @@
+one:
+  mch_id: "1000000000"
+  type: "normal_vendor"
+  v2_key: "FILLER"
+  v3_key: "FILLER"
+  sp_mch_id: nil
