@@ -1,0 +1,15 @@
+default: &default
+  SECRET_KEY_BASE: "FILLER"
+  remote_ip_whitelist: "127.0.0.1"
+  client_auth_token: "FILLER"
+  app_frontend_base_url: "https://example.com"
+  app_backend_base_url: "https://example.com"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

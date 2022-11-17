@@ -3,6 +3,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gemspec
 
-group :development do
-  gem "sassc-rails"
+gem "turbo-rails"
+gem "propshaft"
+gem "sassc-rails"
+gem "puma"
+gem "pg"
+gem "redlock"
+
+group :development, :test do
+  gem "debug"
 end

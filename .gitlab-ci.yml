@@ -1,0 +1,21 @@
+before_script:
+  - pwd
+  - ruby -v
+
+stages:
+  - test
+
+test_staging:
+  stage: test
+  environment:
+    name: staging
+    url: https://FILLER.com
+  only:
+    - master
+  script:
+    - bundle install -j $(nproc)
+    - ln -s /home/gitlab-runner/shared/configs/as_projects/wechat_vendor_platform/wechat_vendor_platform_proxy/database.yml ./test/dummy/config/database.yml
+    - bin/rails db:drop RAILS_ENV=test
+    - bin/rails db:create RAILS_ENV=test
+    - bin/rails db:migrate RAILS_ENV=test
+    - bin/rails test
