@@ -40,7 +40,7 @@ module WechatVendorPlatformProxy
         args
           .map { |arg| "#{arg}\n" }
           .join
-          .then { |txt| OpenSSL::PKey::RSA.new(vendor.latest_api_client_certificate.key).sign("sha256", txt) }
+          .then { |txt| OpenSSL::PKey::RSA.new(vendor.latest_api_client_certificate.key).sign("SHA256", txt) }
           .then { |txt| Base64.strict_encode64(txt) }
       end
     end
