@@ -4,3 +4,9 @@ one:
   account_type: "personal_openid"
   account: "FILLER_000000000000000000001"
   relation_type: "user"
+two:
+  vendor: sp_two
+  app_id: "wx0000000000000002"
+  account_type: "personal_openid"
+  account: "FILLER_000000000000000000002"
+  relation_type: "user"

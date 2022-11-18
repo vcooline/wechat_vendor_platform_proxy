@@ -4,3 +4,14 @@ one:
   v2_key: "FILLER"
   v3_key: "FILLER"
   sp_mch_id: nil
+sp_two:
+  mch_id: "2000000001"
+  type: "service_provider"
+  v2_key: "FILLER"
+  v3_key: "FILLER"
+ec_two:
+  mch_id: "2000000002"
+  type: "ecommerce_vendor"
+  v2_key: "FILLER"
+  v3_key: "FILLER"
+  sp_mch_id: "2000000001"
