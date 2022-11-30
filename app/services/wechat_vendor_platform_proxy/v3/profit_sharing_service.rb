@@ -87,7 +87,7 @@ module WechatVendorPlatformProxy
     #     ]
     #   }
     def query(transaction_id:, out_order_no:)
-      resp = api_client.get "/v3/profitsharing/orders/#{out_order_no}?&transaction_id=#{transaction_id}"
+      resp = api_client.get "/v3/profitsharing/orders/#{out_order_no}?transaction_id=#{transaction_id}"
       parse_resp_with_error_handling(resp)
     end
 
