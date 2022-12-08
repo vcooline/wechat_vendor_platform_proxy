@@ -103,7 +103,7 @@ module WechatVendorPlatformProxy
     #     sub_mchid: "",
     #     transaction_id: "微信支付订单号"
     #     out_order_no: "同一分账单号多次请求等同一次"
-    #     order_id: "解冻全部剩余资金"
+    #     description: "解冻全部剩余资金"
     #   }
     # => {"sub_mchid": "1900000109", "transaction_id": "4208450740201411110007820472", "out_order_no": "P20150806125346", "order_id": "3008450740201411110007820472"}
     def unfreeze(unfreeze_params = {})

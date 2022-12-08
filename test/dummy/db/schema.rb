@@ -220,6 +220,7 @@ ActiveRecord::Schema[7.0].define(version: 2099_11_17_054718) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "v3_key"
     t.string "sp_mch_id"
+    t.decimal "fee_rate", precision: 4, scale: 4
     t.index ["mch_id"], name: "index_wxpay_vendors_on_mch_id", unique: true
     t.index ["sp_mch_id"], name: "index_wxpay_vendors_on_sp_mch_id"
   end
