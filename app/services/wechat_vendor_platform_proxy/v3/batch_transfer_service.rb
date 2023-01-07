@@ -50,7 +50,10 @@ module WechatVendorPlatformProxy
     #   out_batch_no: ""
     # }
     def apply(transfer_params = {})
-      resp = api_client.post "/v3/transfer/batches", transfer_params.to_json
+      resp = api_client.post \
+        "/v3/transfer/batches",
+        transfer_params.to_json,
+        extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
       JSON.parse(resp.body).tap do |resp_info|
         handle_api_error(resp_info) unless resp.success?
       end
