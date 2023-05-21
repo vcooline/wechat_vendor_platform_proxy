@@ -16,6 +16,9 @@ module WechatVendorPlatformProxy
       %w[business_license_info business_license_copy_gid],
       %w[id_card_info id_card_copy_gid],
       %w[id_card_info id_card_national_gid],
+      %w[contact_info contact_id_doc_copy_gid],
+      %w[contact_info contact_id_doc_copy_back_gid],
+      %w[contact_info business_authorization_letter_gid],
       %w[qualifications gids],
       %w[business_addition_pics gids]
     ].freeze
