@@ -86,6 +86,7 @@ module WechatVendorPlatformProxy
         .tap { |h| h.merge!({ qualifications: applyment.converted_qualifications }.compact_blank) }
         .tap { |h| h.merge!({ business_addition_pics: applyment.converted_business_addition_pics }.compact_blank) }
         .tap { |h| h.delete(:business_license_info) if applyment.organization_type.in?(%w[micro seller]) }
+        .tap { |h| h[:contact_info].except!(:contact_id_doc_type, :contact_id_doc_period_begin, :contact_id_doc_period_end) if h.dig(:contact_info, :contact_type).eql?("65") }
         .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
         .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
         .tap { |h| h.merge!(owner: true) if applyment.enterprise? }
