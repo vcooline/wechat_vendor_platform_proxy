@@ -88,6 +88,7 @@ zh-CN:
         account_number: "银行账号"
       wechat_vendor_platform_proxy/e_commerce/applyment/state:
         ready: "已创建"
+        submitted: "已申请"
         checking: "资料校验中"
         account_need_verify: "待账户验证"
         auditing: "审核中"
