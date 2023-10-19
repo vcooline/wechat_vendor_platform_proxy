@@ -35,7 +35,7 @@ module WechatVendorPlatformProxy
         end
     end
 
-    # order_params example(jsapi):
+    # order_params example(jsapi, native):
     #   {
     #     appid: "",
     #     mchid: "",
@@ -45,12 +45,17 @@ module WechatVendorPlatformProxy
     #     attach: "", # optional
     #     notify_url: "",
     #     goods_tag: "", # optional,
+    #     support_fapiao: true|false, # optional
     #     amount: { total: 0, currency: "CNY" },
-    #     payer: { openid: "" }, # sp_openid, sub_openid must have one
+    #     payer: { openid: "" }, # jsapi: sp_openid, sub_openid must have one; native: no this item;
     #     detail: { cost_price: "", invoice_id: "", goods_detail: [] }, # optional
     #     scene_info: { payer_client_ip: "", device_id: "", store_info: { id: "", name: "", area_code: "", address: "" } } # optional
     #     settle_info: { profit_sharing: true|false }, # optional
     #   }
+    # response example(jsapi):
+    #   { prepay_id: "" }
+    # response example(native):
+    #   { code_url: "" }
     %i[jsapi].each do |order_type|
       define_method "build_#{order_type}_order" do |order_params = {}|
         resp = api_client.post "/v3/pay/transactions/#{order_type}", order_params.to_json
