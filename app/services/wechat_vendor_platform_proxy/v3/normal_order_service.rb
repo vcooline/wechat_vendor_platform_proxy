@@ -25,7 +25,7 @@ module WechatVendorPlatformProxy
 
     class << self
       def invoke(method_name, order_params = {})
-        new(detect_vendor(order_params[:mch_id])).public_send(method_name, order_params)
+        new(detect_vendor(order_params[:mchid])).public_send(method_name, order_params)
       end
 
       private
