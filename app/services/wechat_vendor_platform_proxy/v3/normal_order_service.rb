@@ -56,7 +56,7 @@ module WechatVendorPlatformProxy
     #   { prepay_id: "" }
     # response example(native):
     #   { code_url: "" }
-    %i[jsapi].each do |order_type|
+    %i[jsapi native].each do |order_type|
       define_method "build_#{order_type}_order" do |order_params = {}|
         resp = api_client.post "/v3/pay/transactions/#{order_type}", order_params.to_json
         JSON.parse(resp.body).tap do |resp_info|
