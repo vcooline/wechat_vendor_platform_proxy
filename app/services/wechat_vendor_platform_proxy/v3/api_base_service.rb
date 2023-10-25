@@ -25,7 +25,10 @@ module WechatVendorPlatformProxy
 
         def parse_resp_with_error_handling(resp)
           JSON.parse(resp.body).tap do |resp_info|
-            raise ("#{self.class.name}::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
+            unless resp.success?
+              raise ("#{self.class.name}::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError),
+                resp_info["message"]
+            end
           end
         end
 

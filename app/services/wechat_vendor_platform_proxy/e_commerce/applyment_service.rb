@@ -23,6 +23,17 @@ module WechatVendorPlatformProxy
       %w[business_addition_pics gids]
     ].freeze
 
+    MEDIA_FIELD_MAPPING = {
+      business_license_copy: %w[business_license_info business_license_copy_gid],
+      id_card_copy: %w[id_card_info id_card_copy_gid],
+      id_card_national: %w[id_card_info id_card_national_gid],
+      contact_id_doc_copy: %w[contact_info contact_id_doc_copy_gid],
+      contact_id_doc_copy_back: %w[contact_info contact_id_doc_copy_back_gid],
+      business_authorization_letter: %w[contact_info business_authorization_letter_gid],
+      qualifications: %w[qualifications gids],
+      business_addition_pics: %w[business_addition_pics gids]
+    }.freeze
+
     def sync_media_fields(applyment, changes = {}, force: false)
       MEDIA_FIELD_KEYS.each do |field_key|
         prev, curr = *[0, 1].map { |idx| changes.dig(field_key[0], idx, *field_key[1..]) }
@@ -68,10 +79,12 @@ module WechatVendorPlatformProxy
         update_attrs = resp_info.slice(*%w[sign_url legal_validation_url account_validation audit_detail])
           .merge(state: resp_info["applyment_state"].downcase, state_desc: resp_info["applyment_state_desc"], sign_state: resp_info["sign_state"].downcase, sub_mch_id: resp_info["sub_mchid"])
           .tap do |attrs|
-            break attrs unless attrs["account_validation"].present?
+            break attrs if attrs["account_validation"].blank?
 
             attrs["account_validation"]["account_name"] = cipher.decrypt(attrs["account_validation"]["account_name"])
-            attrs["account_validation"]["account_no"].presence&.then { |account_no| attrs["account_validation"]["account_no"] = cipher.decrypt(account_no) }
+            attrs["account_validation"]["account_no"].presence&.then do |account_no|
+              attrs["account_validation"]["account_no"] = cipher.decrypt(account_no)
+            end
           end
         applyment.update update_attrs
       end
@@ -86,9 +99,11 @@ module WechatVendorPlatformProxy
         .tap { |h| h.merge!({ qualifications: applyment.converted_qualifications }.compact_blank) }
         .tap { |h| h.merge!({ business_addition_pics: applyment.converted_business_addition_pics }.compact_blank) }
         .tap { |h| h.delete(:business_license_info) if applyment.organization_type.in?(%w[micro seller]) }
-        .tap { |h| h[:contact_info].except!(:contact_id_doc_type, :contact_id_doc_period_begin, :contact_id_doc_period_end) if h.dig(:contact_info, :contact_type).eql?("65") }
+        .tap do |h|
+        h[:contact_info].except!(:contact_id_doc_type, :contact_id_doc_period_begin, :contact_id_doc_period_end) if h.dig(:contact_info,
+          :contact_type).eql?("65")
+      end
         .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
-        .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
         .tap { |h| h.merge!(owner: true) if applyment.enterprise? }
         .to_json
     end
@@ -97,7 +112,7 @@ module WechatVendorPlatformProxy
 
       def gid_to_media_id(gid)
         GlobalID::Locator.locate(gid)&.then do |obj|
-          media_file = Tempfile.new(obj.name.rpartition(".").then{ ["#{_1}.", ".#{_3}"] }, encoding: 'ascii-8bit')
+          media_file = Tempfile.new(obj.name.rpartition(".").then { ["#{_1}.", ".#{_3}"] }, encoding: "ascii-8bit")
             .tap { |f| f.write(URI.parse(Addressable::URI.parse(obj.private_url).normalize).read) and f.rewind }
           media_service.upload_image(media_file)["media_id"]
         end

@@ -1,5 +1,14 @@
 module WechatVendorPlatformProxy
   class ECommerce::Applyment < ApplicationRecord
+    has_one_attached :business_license_copy
+    has_one_attached :id_card_copy
+    has_one_attached :id_card_national
+    has_one_attached :contact_id_doc_copy
+    has_one_attached :contact_id_doc_copy_back
+    has_one_attached :business_authorization_letter
+    has_many_attached :qualifications
+    has_many_attached :business_addition_pics
+
     belongs_to :owner, polymorphic: true
     has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
     has_one :vendor, class_name: "WechatVendorPlatformProxy::Vendor", foreign_key: :mch_id, primary_key: :sub_mch_id
@@ -27,7 +36,7 @@ module WechatVendorPlatformProxy
       others: 1708 # 社会组织，包括社会团体、民办非企业、基金会、基层群众性自治组织、农村集体经济组织等组织。
     }
 
-    validates_presence_of :organization_type, :merchant_shortname
+    validates :organization_type, :merchant_shortname, presence: true
     validates :out_request_no, presence: true, uniqueness: true
 
     before_validation :set_initial_attrs, on: :create
@@ -44,7 +53,7 @@ module WechatVendorPlatformProxy
     private
 
       def set_initial_attrs
-        self.out_request_no ||= [DateTime.now.strftime("%Y%m%d%H%M%S"), Random.rand(99999).to_s.rjust(5, '0')].join("_")
+        self.out_request_no ||= [DateTime.now.strftime("%Y%m%d%H%M%S"), Random.rand(99999).to_s.rjust(5, "0")].join("_")
         self.business_license_info ||= {}
         self.id_card_info ||= {}
         self.account_info ||= {}
@@ -55,7 +64,7 @@ module WechatVendorPlatformProxy
       end
 
       def sync_vendor
-        return unless self.finish? && self.sub_mch_id.present?
+        return unless finish? && sub_mch_id.present?
 
         WechatVendorPlatformProxy::Vendor.ecommerce_vendor.find_or_create_by(mch_id: sub_mch_id)
       end

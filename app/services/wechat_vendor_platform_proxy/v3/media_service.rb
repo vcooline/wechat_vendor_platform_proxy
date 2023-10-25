@@ -9,7 +9,7 @@ module WechatVendorPlatformProxy
         JSON.parse(resp.body)
       end
 
-      def upload_video(video)
+      def upload_video(_video)
         raise "To be implemented"
       end
     end

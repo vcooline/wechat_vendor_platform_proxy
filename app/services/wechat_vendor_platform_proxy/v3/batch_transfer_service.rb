@@ -60,7 +60,7 @@ module WechatVendorPlatformProxy
     end
 
     def query_batch(out_batch_no:, need_query_detail: true, offset: 0, limit: 100, detail_status: "ALL")
-      resp = api_client.get "/v3/transfer/batches/out-batch-no/#{out_batch_no}?#{{need_query_detail:, offset:, limit:, detail_status:}.to_query}"
+      resp = api_client.get "/v3/transfer/batches/out-batch-no/#{out_batch_no}?#{{ need_query_detail:, offset:, limit:, detail_status: }.to_query}"
       JSON.parse(resp.body).tap do |resp_info|
         handle_api_error(resp_info) unless resp.success?
       end

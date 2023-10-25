@@ -1,24 +1,25 @@
 module WechatVendorPlatformProxy
   class WalletTransferService
-
-    %w(NO_AUTH AMOUNT_LIMIT FREQ_LIMIT MONEY_LIMIT SENDNUM_LIMIT V2_ACCOUNT_SIMPLE_BAN OPENID_ERROR NOTENOUGH NAME_MISMATCH SEND_FAILED SYSTEMERROR).each do |err_code|
+    %w[NO_AUTH AMOUNT_LIMIT FREQ_LIMIT MONEY_LIMIT SENDNUM_LIMIT V2_ACCOUNT_SIMPLE_BAN OPENID_ERROR NOTENOUGH NAME_MISMATCH SEND_FAILED
+       SYSTEMERROR].each do |err_code|
       const_set err_code.to_sym, Class.new(StandardError)
     end
 
     attr_reader :vendor
 
     class << self
-      def perform(transfer_params={})
+      def perform(transfer_params = {})
         new(get_vendor(transfer_params[:mchid])).perform(transfer_params)
       end
 
-      def fetch_info(query_params={})
+      def fetch_info(query_params = {})
         new(get_vendor(query_params[:mch_id])).fetch_info(query_params)
       end
 
       private
+
         def get_vendor(mch_id)
-          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id: mch_id)
+          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id:)
         end
     end
 
@@ -35,7 +36,7 @@ module WechatVendorPlatformProxy
     #     amount: 1.00,
     #     desc: ""
     #   }
-    def perform(transfer_params={})
+    def perform(transfer_params = {})
       request_params = generate_transfer_params(transfer_params)
       call_transfer_api(request_params)
     end
@@ -46,26 +47,27 @@ module WechatVendorPlatformProxy
     #     appid: "",
     #     partner_trade_no: "",
     #   }
-    def fetch_info(query_params={})
+    def fetch_info(query_params = {})
       request_params = generate_query_params(query_params)
       call_query_api(request_params)
     end
 
     private
+
       def ssl_api_client
         ssl_client_key = OpenSSL::PKey::RSA.new vendor.api_client_key
         ssl_client_cert = OpenSSL::X509::Certificate.new vendor.api_client_cert
-        Faraday.new(ssl: {client_key: ssl_client_key, client_cert: ssl_client_cert}, headers: {'Content-Type' => 'application/xml'})
+        Faraday.new(ssl: { client_key: ssl_client_key, client_cert: ssl_client_cert }, headers: { "Content-Type" => "application/xml" })
       end
 
       def sign_params(p)
-        Digest::MD5.hexdigest(p.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}").upcase
+        Digest::MD5.hexdigest(p.sort.map { |k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}").upcase
       end
 
       def generate_transfer_params(base_params)
         base_params.reverse_merge(
           check_name: "NO_CHECK",
-          spbill_create_ip: Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address,
+          spbill_create_ip: Socket.ip_address_list.detect(&:ipv4_private?).ip_address,
           nonce_str: SecureRandom.hex
         ).tap { |p| p[:sign] = sign_params(p) }
       end

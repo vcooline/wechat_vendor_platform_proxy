@@ -94,7 +94,7 @@ module WechatVendorPlatformProxy
     #     "finish_description": "分账完结"
     #   }
     def query(sub_mchid:, transaction_id:, out_order_no:)
-      resp = api_client.get "/v3/ecommerce/profitsharing/orders?#{{sub_mchid:, transaction_id:, out_order_no:}.to_query}"
+      resp = api_client.get "/v3/ecommerce/profitsharing/orders?#{{ sub_mchid:, transaction_id:, out_order_no: }.to_query}"
       parse_resp_with_error_handling(resp)
     end
 
@@ -136,7 +136,7 @@ module WechatVendorPlatformProxy
         receiver.update!({
           account_type: resp_info["type"].downcase,
           name: receiver_params[:name],
-          relation_type: receiver_params[:relation_type].downcase,
+          relation_type: receiver_params[:relation_type].downcase
         }.compact_blank)
       end
     end

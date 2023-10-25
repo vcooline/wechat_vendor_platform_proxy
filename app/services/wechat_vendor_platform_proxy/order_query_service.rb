@@ -3,13 +3,14 @@ module WechatVendorPlatformProxy
     attr_reader :vendor
 
     class << self
-      def perform(order_params={})
+      def perform(order_params = {})
         new(get_vendor(order_params[:sub_mch_id] || order_params[:mch_id])).perform(order_params)
       end
 
       private
+
         def get_vendor(mch_id)
-          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id: mch_id)
+          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id:)
         end
     end
 
@@ -25,14 +26,15 @@ module WechatVendorPlatformProxy
     #     sub_mch_id: "",, (optional)
     #     out_trade_no: "", (transaction_id: "")
     #   }
-    def perform(order_params={})
+    def perform(order_params = {})
       request_params = generate_order_params(order_params)
       call_order_api(request_params)
     end
 
     private
+
       def sign_params(p)
-        Digest::MD5.hexdigest(p.sort.map{|k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}").upcase
+        Digest::MD5.hexdigest(p.sort.map { |k, v| "#{k}=#{v}" }.join("&").to_s + "&key=#{vendor.sign_key}").upcase
       end
 
       def generate_order_params(base_params)

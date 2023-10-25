@@ -33,7 +33,7 @@ module WechatVendorPlatformProxy
     private
 
       def set_initial_attrs
-        self.business_code ||= [DateTime.now.strftime("%Y%m%d%H%M%S"), Random.rand(99999).to_s.rjust(5, '0')].join("_")
+        self.business_code ||= [DateTime.now.strftime("%Y%m%d%H%M%S"), Random.rand(99999).to_s.rjust(5, "0")].join("_")
         self.contact_info ||= {}
         self.subject_info ||= {}
         self.business_info ||= {}

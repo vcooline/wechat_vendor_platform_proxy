@@ -10,8 +10,9 @@ module WechatVendorPlatformProxy
       end
 
       private
+
         def get_vendor(mch_id)
-          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id: mch_id)
+          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id:)
         end
     end
 
@@ -19,25 +20,23 @@ module WechatVendorPlatformProxy
       @vendor = vendor
     end
 
-    def encrypt(original_content="")
-    end
+    def encrypt(original_content = ""); end
 
-    def decrypt(encrypted_content="")
+    def decrypt(encrypted_content = "")
       OpenSSL::Cipher.new("aes-256-ecb")
         .decrypt
-        .tap{ |c| c.padding = 0 }
-        .tap{ |c| c.key = Digest::MD5.hexdigest(vendor.sign_key) }
-        .then{ |c| c.update(Base64.decode64(encrypted_content)) << c.final }
+        .tap { |c| c.padding = 0 }
+        .tap { |c| c.key = Digest::MD5.hexdigest(vendor.sign_key) }
+        .then { |c| c.update(Base64.decode64(encrypted_content)) << c.final }
         .strip
-        .then { |content| content[0..content.rindex('>')] }
+        .then { |content| content[0..content.rindex(">")] }
     end
 
-    private
-      # def decode_padding(plain)
-      #   pad = plain.bytes[-1]
-      #   # no padding
-      #   pad = 0 if pad < 1 || pad > 32
-      #   plain[0...(plain.length - pad)]
-      # end
+    # def decode_padding(plain)
+    #   pad = plain.bytes[-1]
+    #   # no padding
+    #   pad = 0 if pad < 1 || pad > 32
+    #   plain[0...(plain.length - pad)]
+    # end
   end
 end

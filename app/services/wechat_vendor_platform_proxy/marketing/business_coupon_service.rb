@@ -26,7 +26,9 @@ module WechatVendorPlatformProxy
           "/v3/marketing/busifavor/callbacks",
           {
             mchid: vendor.mch_id,
-            notify_url: (url || WechatVendorPlatformProxy::Engine.routes.url_helpers.business_coupon_wxpay_callback_events_url(host: ENVConfig.app_frontend_base_url, protocol: "https"))
+            notify_url: (url || WechatVendorPlatformProxy::Engine.routes.url_helpers.business_coupon_wxpay_callback_events_url(
+              host: ENVConfig.app_frontend_base_url, protocol: "https"
+            ))
           }.to_json
 
         JSON.parse(resp.body)
@@ -102,7 +104,8 @@ module WechatVendorPlatformProxy
       def sync_coupon(coupon)
         get_coupon(coupon)&.then do |coupon_info|
           coupon.assign_attributes \
-            coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no deactivate_reason]).compact_blank
+            coupon_info.slice(*%w[stock_name goods_name receive_time available_start_time expire_time coupon_use_rule deactivate_request_no
+                                  deactivate_reason]).compact_blank
           coupon.state = coupon_info["coupon_state"].underscore
           coupon.save
           coupon

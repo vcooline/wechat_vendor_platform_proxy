@@ -57,7 +57,10 @@ module WechatVendorPlatformProxy
       define_method "build_#{order_type}_order" do |order_params = {}|
         resp = api_client.post "/v3/pay/partner/transactions/#{order_type}", order_params.to_json
         JSON.parse(resp.body).tap do |resp_info|
-          raise ("WechatVendorPlatformProxy::ECommerce::NormalOrderService::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError), resp_info["message"] unless resp.success?
+          unless resp.success?
+            raise ("WechatVendorPlatformProxy::ECommerce::NormalOrderService::#{resp_info['code'].underscore.camelize}".safe_constantize || StandardError),
+              resp_info["message"]
+          end
         end
       end
     end

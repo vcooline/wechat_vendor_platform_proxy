@@ -19,7 +19,7 @@ module WechatVendorPlatformProxy
 
         def detect_vendor_by_platform_serial_no(serial_no)
           certificate = PlatformCertificate.find_by(serial_no:)
-          raise InvalidPlatformSerialNoError, "Invalid wechat pay certificate serial_no" unless certificate.present?
+          raise InvalidPlatformSerialNoError, "Invalid wechat pay certificate serial_no" if certificate.blank?
 
           certificate.vendor
         end

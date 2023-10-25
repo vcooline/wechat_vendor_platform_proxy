@@ -116,12 +116,14 @@ module WechatVendorPlatformProxy
         end
       end
 
-      def query(applyment)
-      end
+      def query(applyment); end
 
       def build_api_json(applyment)
         applyment.slice(:business_code, :contact_info, :subject_info, :business_info, :settlement_info, :bank_account_info, :addition_info)
-          .tap { |h| h.deep_merge!({ subject_info: { identity_info: { owner: applyment.subject_info.dig("identity_info", "owner").to_i.positive? } } }) }
+          .tap do |h|
+          h.deep_merge!({ subject_info: { identity_info: { owner: applyment.subject_info.dig("identity_info",
+            "owner").to_i.positive? } } })
+        end
           .tap { |h| ORIGINAL_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
           .tap { |h| MEDIA_FIELD_KEYS.each { |k| h.dig(*k[0...-1])&.delete(k[-1]) } }
           .then(&method(:slice_subject_keys))
@@ -132,7 +134,7 @@ module WechatVendorPlatformProxy
 
         def gid_to_media_id(gid)
           GlobalID::Locator.locate(gid)&.then do |obj|
-            media_file = Tempfile.new(obj.name.rpartition(".").then{ ["#{_1}.", ".#{_3}"] }, encoding: 'ascii-8bit')
+            media_file = Tempfile.new(obj.name.rpartition(".").then { ["#{_1}.", ".#{_3}"] }, encoding: "ascii-8bit")
               .tap { |f| f.write(URI.parse(Addressable::URI.parse(obj.private_url).normalize).read) and f.rewind }
             media_service.upload_image(media_file)["media_id"]
           end

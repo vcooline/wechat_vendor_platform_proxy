@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class WechatVendorPlatformProxy::Test < ActiveSupport::TestCase
   test "it should namespaced by module" do

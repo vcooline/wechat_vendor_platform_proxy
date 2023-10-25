@@ -1,23 +1,25 @@
 module WechatVendorPlatformProxy
   class ProfitSharingService
-    %w(SYSTEMERROR AMOUNT_OVERDUE RECEIVER_INVALID INVALID_TRANSACTIONID PARAM_ERROR INVALID_REQUEST OPENID_MISMATCH FREQUENCY_LIMITED ORDER_NOT_READY NOAUTH NOT_SHARE_ORDER RECEIVER_HIGH_RISK).each do |err_code|
+    %w[SYSTEMERROR AMOUNT_OVERDUE RECEIVER_INVALID INVALID_TRANSACTIONID PARAM_ERROR INVALID_REQUEST OPENID_MISMATCH FREQUENCY_LIMITED
+       ORDER_NOT_READY NOAUTH NOT_SHARE_ORDER RECEIVER_HIGH_RISK].each do |err_code|
       const_set err_code.to_sym, Class.new(StandardError)
     end
 
     attr_reader :vendor
 
     class << self
-      def call(profit_sharing_params={})
+      def call(_profit_sharing_params = {})
         raise "Not implemented"
       end
 
-      def query_ratio(query_ratio_params={})
+      def query_ratio(query_ratio_params = {})
         new(get_vendor(query_ratio_params[:mch_id])).query_ratio(query_ratio_params)
       end
 
       private
+
         def get_vendor(mch_id)
-          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id: mch_id)
+          ::WechatVendorPlatformProxy::Vendor.find_by!(mch_id:)
         end
     end
 
@@ -25,7 +27,7 @@ module WechatVendorPlatformProxy
       @vendor = vendor
     end
 
-    def perform(profit_sharing_params={})
+    def perform(_profit_sharing_params = {})
       raise "Not implemented"
     end
 
@@ -34,7 +36,7 @@ module WechatVendorPlatformProxy
     #     mch_id: "",
     #     sub_mch_id: "",
     #   }
-    def query_ratio(query_ratio_params={})
+    def query_ratio(query_ratio_params = {})
       request_params = query_ratio_params.reverse_merge(
         nonce_str: SecureRandom.hex,
         sign_type: "HMAC-SHA256"

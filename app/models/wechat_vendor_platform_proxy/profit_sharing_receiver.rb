@@ -20,7 +20,7 @@ module WechatVendorPlatformProxy
       custom: 10 # 自定义
     }
 
-    validates_presence_of :app_id, :account_type, :account, :relation_type
-    validates_uniqueness_of :account, scope: [:vendor_id, :app_id]
+    validates :app_id, :account_type, :account, :relation_type, presence: true
+    validates :account, uniqueness: { scope: %i[vendor_id app_id] }
   end
 end

@@ -10,7 +10,7 @@ namespace :wechat_vendor_platform_proxy do
   end
 
   desc "Sync wechat pay platform certficates"
-  task :sync_platform_certificates, [] => [:environment, :set_logger] do |_tasks, _args|
+  task :sync_platform_certificates, [] => %i[environment set_logger] do |_tasks, _args|
     Rails.logger.info "Sync wechat pay platform certficates START."
 
     WechatVendorPlatformProxy::Vendor.find_each do |vendor|

@@ -3,7 +3,7 @@ module WechatVendorPlatformProxy
     belongs_to :vendor
 
     validates :serial_no, presence: true, uniqueness: true
-    validates_presence_of :key, :cert, :effective_at, :expire_at
+    validates :key, :cert, :effective_at, :expire_at, presence: true
 
     before_validation :sync_cert_info, on: :create
     validate :must_match_vendor_mch_id

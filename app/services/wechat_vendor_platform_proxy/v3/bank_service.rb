@@ -16,7 +16,9 @@ module WechatVendorPlatformProxy
           break if bank_info.dig("links", "next").blank?
         end
 
-        bank_infos.map { |info| Capital::PersonalBank.find_or_create_by info.slice(*%w[account_bank account_bank_code bank_alias bank_alias_code need_bank_branch]) }
+        bank_infos.map do |info|
+          Capital::PersonalBank.find_or_create_by info.slice(*%w[account_bank account_bank_code bank_alias bank_alias_code need_bank_branch])
+        end
           .tap { |banks| Capital::PersonalBank.where.not(id: banks.map(&:id)).destroy_all }
           .then(&:size)
       end
@@ -36,7 +38,9 @@ module WechatVendorPlatformProxy
           break if bank_info.dig("links", "next").blank?
         end
 
-        bank_infos.map { |info| Capital::CorporateBank.find_or_create_by info.slice(*%w[account_bank account_bank_code bank_alias bank_alias_code need_bank_branch]) }
+        bank_infos.map do |info|
+          Capital::CorporateBank.find_or_create_by info.slice(*%w[account_bank account_bank_code bank_alias bank_alias_code need_bank_branch])
+        end
           .tap { |banks| Capital::CorporateBank.where.not(id: banks.map(&:id)).destroy_all }
           .then(&:size)
       end
@@ -98,8 +102,11 @@ module WechatVendorPlatformProxy
 
           resp_info = branch_list(bank_alias_code:, city_code: city_info["city_code"], page:)
           Array(resp_info["data"]).each do |branch_info|
-            Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge({ bank_alias_code: }, province_info, city_info))
-              .then { |b| branches.push(b) }
+            Capital::BankBranch.find_or_create_by(branch_info.slice(*%w[bank_branch_name bank_branch_id]).merge({ bank_alias_code: }, province_info,
+              city_info))
+              .then do |b|
+              branches.push(b)
+            end
           end
 
           resp_info.slice("link").merge("branches" => branches)

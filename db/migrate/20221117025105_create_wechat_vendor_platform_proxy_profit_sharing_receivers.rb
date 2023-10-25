@@ -11,7 +11,7 @@ class CreateWechatVendorPlatformProxyProfitSharingReceivers < ActiveRecord::Migr
 
       t.timestamps
 
-      t.index [:account, :vendor_id, :app_id], name: "index_wxpay_profit_sharing_receivers_on_vendor_app_account", unique: true
+      t.index %i[account vendor_id app_id], name: "index_wxpay_profit_sharing_receivers_on_vendor_app_account", unique: true
     end
   end
 end

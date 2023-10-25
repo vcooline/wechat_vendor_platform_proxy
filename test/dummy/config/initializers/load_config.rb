@@ -12,7 +12,7 @@ class ENVConfig
       define_method(key.to_sym) { value }
     end
 
-    def method_missing(_method_sym, *_arguments, &_block)
+    def method_missing(_method_sym, *_arguments, &)
       nil
     end
 

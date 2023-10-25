@@ -1,7 +1,7 @@
 class MigrateWechatVendorPlatformProxyApiCerts < ActiveRecord::Migration[7.0]
   def up
     WechatVendorPlatformProxy::Vendor.find_each do |vendor|
-      next unless vendor.attributes["api_client_key"].present?
+      next if vendor.attributes["api_client_key"].blank?
 
       vendor.api_client_certificates.find_or_create_by \
         key: vendor.attributes["api_client_key"],

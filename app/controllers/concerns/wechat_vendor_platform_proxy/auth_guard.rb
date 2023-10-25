@@ -6,8 +6,8 @@ module WechatVendorPlatformProxy
     NotAllowedRemoteIpError = Class.new(StandardError)
     AuthenticateFailError = Class.new(StandardError)
 
-    SupportedAuthTypes = ["PlainUserToken", "PlainClientToken"]
-    UrlAuthTypeMappings = { auth_token: "PlainClientToken" }
+    SupportedAuthTypes = %w[PlainUserToken PlainClientToken].freeze
+    UrlAuthTypeMappings = { auth_token: "PlainClientToken" }.freeze
 
     included do
       rescue_from AuthenticateFailError, with: :handle_auth_failure
@@ -18,6 +18,7 @@ module WechatVendorPlatformProxy
     end
 
     private
+
       def authenticate
         raise AuthenticateFailError unless current_user.present? || params[:in_iframe]
       end
@@ -36,7 +37,7 @@ module WechatVendorPlatformProxy
 
       def authenticate_client
         send("authenticate_client_using_#{auth_params[:type].underscore}", auth_params[:value])
-      rescue => e
+      rescue StandardError => e
         logger.error "#{e.class.name}: #{e.message}"
         raise AuthenticateFailError, "#{e.class.name}: #{e.message}"
       end
@@ -55,7 +56,7 @@ module WechatVendorPlatformProxy
 
       def create_user_using_plain_user_token(token_value)
         User.transaction do
-          User.create!(uid: SecureRandom.base58).tap{|u| u.credentials.create!(token: token_value) }
+          User.create!(uid: SecureRandom.base58).tap { |u| u.credentials.create!(token: token_value) }
         end
       end
 
@@ -64,42 +65,41 @@ module WechatVendorPlatformProxy
       end
 
       def auth_params_from_header
-        if request.authorization.present?
-          HashWithIndifferentAccess.new.tap{ |p| p[:type], p[:value] = request.authorization&.split }.tap do |p|
-            raise(InvalidAuthTypeError, "auth type not supported.") if SupportedAuthTypes.exclude?(p[:type])
-            raise(InvalidAuthValueError, "auth value is blank.") if p[:value].blank?
-          end
+        return if request.authorization.blank?
+
+        ActiveSupport::HashWithIndifferentAccess.new.tap { |p| p[:type], p[:value] = request.authorization&.split }.tap do |p|
+          raise(InvalidAuthTypeError, "auth type not supported.") if SupportedAuthTypes.exclude?(p[:type])
+          raise(InvalidAuthValueError, "auth value is blank.") if p[:value].blank?
         end
       end
 
       def auth_params_from_url
         UrlAuthTypeMappings.each do |original_type, type|
-          return {type: type, value: params[original_type]} if params[original_type].present?
+          return { type:, value: params[original_type] } if params[original_type].present?
         end
-        return nil
+        nil
       end
 
       def check_remote_ip_whitelisted
-        unless request.remote_ip.in?(ENVConfig.remote_ip_whitelist.to_s.split(","))
-          logger.error "remote ip not in whitelist: #{request.remote_ip}"
-          raise NotAllowedRemoteIpError, "remote ip not in whitelist: #{request.remote_ip}"
-        end
+        return if request.remote_ip.in?(ENVConfig.remote_ip_whitelist.to_s.split(","))
+
+        logger.error "remote ip not in whitelist: #{request.remote_ip}"
+        raise NotAllowedRemoteIpError, "remote ip not in whitelist: #{request.remote_ip}"
       end
 
-      def verify_params_sign(biz_params, timestamp, nonce, signature)
-      end
+      def verify_params_sign(biz_params, timestamp, nonce, signature); end
 
       def handle_auth_failure
         respond_to do |format|
           format.html { render plain: "权限不足，请联系管理员。", status: :forbidden }
-          format.json { render json: {error: {message: "Unauthenticated"}}, status: :forbidden }
+          format.json { render json: { error: { message: "Unauthenticated" } }, status: :forbidden }
         end
       end
 
       def handle_remote_ip_not_allowed
         respond_to do |format|
           format.html { render plain: "请确认访问客户端已加入IP白名单", status: :forbidden }
-          format.json { render json: {error: {message: "Not in ip whitelist"}}, status: :forbidden }
+          format.json { render json: { error: { message: "Not in ip whitelist" } }, status: :forbidden }
         end
       end
   end

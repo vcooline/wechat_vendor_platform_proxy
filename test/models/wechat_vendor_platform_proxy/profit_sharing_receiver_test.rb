@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 module WechatVendorPlatformProxy
   class ProfitSharingReceiverTest < ActiveSupport::TestCase
@@ -14,8 +14,8 @@ module WechatVendorPlatformProxy
         account: "FILLER_abcdefghijklmnopqrstu"
 
       assert receiver.save
-      assert receiver.personal_openid?
-      assert receiver.staff?
+      assert_predicate receiver, :personal_openid?
+      assert_predicate receiver, :staff?
     end
 
     test "should unique by vendor and app and account" do
