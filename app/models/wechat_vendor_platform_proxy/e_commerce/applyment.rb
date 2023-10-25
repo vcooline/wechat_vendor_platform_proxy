@@ -6,8 +6,8 @@ module WechatVendorPlatformProxy
     has_one_attached :contact_id_doc_copy
     has_one_attached :contact_id_doc_copy_back
     has_one_attached :business_authorization_letter
-    has_many_attached :qualifications
-    has_many_attached :business_addition_pics
+    has_many_attached :qualification_uploads
+    has_many_attached :business_addition_uploads
 
     belongs_to :owner, polymorphic: true
     has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
@@ -17,12 +17,13 @@ module WechatVendorPlatformProxy
       ready: 0,
       submitted: 3,
       checking: 10,
+      authorizing: 15,
       account_need_verify: 20,
       auditing: 30,
       rejected: 40,
       need_sign: 50,
       finish: 60,
-      frozen: 70,
+      applyment_been_frozen: 70,
       canceled: 80
     }, default: :ready
 
@@ -42,12 +43,12 @@ module WechatVendorPlatformProxy
     before_validation :set_initial_attrs, on: :create
     after_commit :sync_vendor, on: :update
 
-    def converted_qualifications
-      Array(qualifications["media_ids"])
+    def formatted_qualifications
+      Array(qualifications).to_json
     end
 
-    def converted_business_addition_pics
-      Array(business_addition_pics["media_ids"])
+    def formatted_business_addition_pics
+      Array(business_addition_pics).to_json
     end
 
     private
@@ -59,8 +60,8 @@ module WechatVendorPlatformProxy
         self.account_info ||= {}
         self.contact_info ||= {}
         self.sales_scene_info ||= {}
-        self.qualifications ||= {}
-        self.business_addition_pics ||= {}
+        self.qualifications ||= []
+        self.business_addition_pics ||= []
       end
 
       def sync_vendor

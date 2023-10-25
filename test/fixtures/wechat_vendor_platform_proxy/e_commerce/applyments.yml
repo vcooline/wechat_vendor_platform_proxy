@@ -1,0 +1,11 @@
+one:
+  out_request_no: "wxpay_ec_applyment_uid_one"
+  merchant_shortname: "merchant shortname one"
+  organization_type: "micro"
+  business_license_info: {}
+  id_card_info: {}
+  account_info: {}
+  contact_info: {}
+  sales_scene_info: {}
+  qualifications: []
+  business_addition_pics: []

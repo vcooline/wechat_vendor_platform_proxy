@@ -24,7 +24,8 @@ module WechatVendorPlatformProxy
 
         def api_call(http_method, fullpath, file, extra_headers: {})
           file_path = file.is_a?(String) ? file : file.path
-          mime_type = MIME::Types.of(file_path).detect { |mt| mt.media_type.in?(%w[image voice video thumb]) }.to_s
+          # mime_type = MIME::Types.of(file_path).detect { |mt| mt.media_type.in?(%w[image voice video thumb]) }.to_s
+          mime_type = Rack::Mime.mime_type(File.extname(file_path))
           meta = { filename: File.basename(file), sha256: Digest::SHA256.hexdigest(File.read(file)) }.to_json
 
           Rails.logger.info "#{self.class.name} #{http_method} #{fullpath} reqt: #{meta}"

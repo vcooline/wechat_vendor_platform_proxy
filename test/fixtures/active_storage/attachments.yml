@@ -1,0 +1,12 @@
+one:
+  name: "business_license_copy"
+  record: one (WechatVendorPlatformProxy::ECommerce::Applyment)
+  blob: filler_image_blob
+two:
+  name: "qualification_uploads"
+  record: one (WechatVendorPlatformProxy::ECommerce::Applyment)
+  blob: filler_image_blob
+three:
+  name: "qualification_uploads"
+  record: one (WechatVendorPlatformProxy::ECommerce::Applyment)
+  blob: another_image_blob

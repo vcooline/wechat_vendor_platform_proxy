@@ -1,0 +1,3 @@
+filler_image_blob: <%= ActiveStorage::FixtureSet.blob filename: "filler_image.png" %>
+another_image_blob: <%= ActiveStorage::FixtureSet.blob filename: "another_image.png" %>
+filler_video_blob: <%= ActiveStorage::FixtureSet.blob filename: "filler_video.mp4" %>

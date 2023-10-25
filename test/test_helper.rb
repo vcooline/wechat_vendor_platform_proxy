@@ -14,6 +14,7 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixture_path = File.expand_path("fixtures", __dir__)
   ActionDispatch::IntegrationTest.fixture_path = ActiveSupport::TestCase.fixture_path
   ActiveSupport::TestCase.file_fixture_path = File.join(ActiveSupport::TestCase.fixture_path, "files")
+  ActiveStorage::FixtureSet.file_fixture_path = ActiveSupport::TestCase.file_fixture_path
   ActiveSupport::TestCase.fixtures :all
 end
 
@@ -23,5 +24,9 @@ require "webmock/minitest"
 
 require "minitest/reporters"
 Minitest::Reporters.use!
+
+Minitest.after_run do
+  FileUtils.rm_rf(ActiveStorage::Blob.services.fetch(:test).root)
+end
 
 ActiveRecord.verify_foreign_keys_for_fixtures = false # Temporarily handle RuntimeError: Foreign key violations found in your fixture data.

@@ -92,3 +92,9 @@ Rails/LexicallyScopedActionFilter:
 Rails/SkipsModelValidations:
   Exclude:
     - "test/**/*.rb"
+
+Performance/MethodObjectAsBlock:
+  Enabled: false
+
+Style/NumberedParametersLimit:
+  Max: 3
