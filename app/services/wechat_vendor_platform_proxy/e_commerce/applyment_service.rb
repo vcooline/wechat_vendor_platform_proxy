@@ -81,7 +81,7 @@ module WechatVendorPlatformProxy
           .merge(
             state: STATE_MAPPING[resp_info["applyment_state"]],
             state_desc: resp_info["applyment_state_desc"],
-            sign_state: resp_info["sign_state"].downcase,
+            sign_state: resp_info["sign_state"]&.downcase,
             sub_mch_id: resp_info["sub_mchid"]
           ).tap do |attrs|
             break attrs if attrs["account_validation"].blank?
