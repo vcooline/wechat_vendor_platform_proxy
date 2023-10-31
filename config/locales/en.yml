@@ -12,6 +12,9 @@ en:
     id_card_valid_time_begin_tips: "Input the valid time begin"
     id_card_valid_time_tips: "Input the valid time end"
     account_info_bank_name_tips: "Required when account bank needs branch info"
+    account_info_bank_address_code_tips: "Input bank address division code(city level)"
+    account_info_account_name_tips: "same to id card name for personal, same to license name for corporate"
+    query_division_code: "Query division code"
     personal_account_bank_list: "Personal account bank list"
     corporate_account_bank_list: "Business account bank list"
   activerecord:
@@ -94,6 +97,7 @@ en:
         contact_id_doc_copy_back: "admin user IdCard back copy"
         business_authorization_letter: "Business authorization letter"
         account_info: "Account info"
+        contact_info: "Contact info"
         sales_scene_info: "Sales scene info"
         settlement_info: "Settlement info"
         other_info: "Other info"
@@ -122,12 +126,18 @@ en:
         institution: "Institution"
         others: "Other"
       wechat_vendor_platform_proxy/e_commerce/applyment/contact_info:
+        contact_type: "Contact type"
+        legal_entity: "legal entity"
+        handler_entity: "handler entity"
         contact_name: "Contact name"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_info:
         bank_account_type: "Bank account type"
         corporate_account: "Corporate account"
         personal_account: "Personal account"
         account_bank: "Account bank"
+        bank_name: "Bank name(include branch name)"
+        bank_address_code: "Bank address division code"
+        account_name: "Account name"
         account_number: "Account number"
       wechat_vendor_platform_proxy/e_commerce/applyment/state:
         ready: "Ready"

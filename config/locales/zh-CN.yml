@@ -12,6 +12,9 @@ zh-CN:
     id_card_valid_time_begin_tips: "填写身份证有效期的开始时间"
     id_card_valid_time_tips: "填写身份证有效期的结束时间;、若证件有效期为长期，请填写：长期; 有效期需大于60天。"
     account_info_bank_name_tips: "开户银行查询信息‘是否需要填写支行’为需要时填写"
+    account_info_bank_address_code_tips: "至少精确到市"
+    account_info_account_name_tips: " 个人银行卡与身份证姓名一致; 对公账户与营业执照一致。"
+    query_division_code: "查询区划编码"
     personal_account_bank_list: "对私银行列表查询"
     corporate_account_bank_list: "对公银行列表查询"
   activerecord:
@@ -94,6 +97,7 @@ zh-CN:
         contact_id_doc_copy_back: "超级管理员证件反面照片"
         business_authorization_letter: "业务办理授权函"
         account_info: "结算账户信息"
+        contact_info: "超级管理员信息"
         sales_scene_info: "店铺信息"
         settlement_info: "结算规则"
         other_info: "其它信息"
@@ -122,12 +126,18 @@ zh-CN:
         institution: "事业单位"
         others: "社会组织"
       wechat_vendor_platform_proxy/e_commerce/applyment/contact_info:
+        contact_type: "超级管理员类型"
+        legal_entity: "经营者/法人"
+        handler_entity: "经办人"
         contact_name: "超级管理员姓名"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_info:
         bank_account_type: "账户类型"
         corporate_account: "对公账户"
         personal_account: "对私账户"
         account_bank: "开户银行"
+        bank_name: "开户银行全称(含支行)"
+        bank_address_code: "开户银行省市编码"
+        account_name: "开户名称"
         account_number: "银行账号"
       wechat_vendor_platform_proxy/e_commerce/applyment/state:
         ready: "已创建"
