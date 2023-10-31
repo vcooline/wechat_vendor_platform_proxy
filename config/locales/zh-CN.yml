@@ -15,6 +15,12 @@ zh-CN:
     account_info_bank_address_code_tips: "至少精确到市"
     account_info_account_name_tips: " 个人银行卡与身份证姓名一致; 对公账户与营业执照一致。"
     query_division_code: "查询区划编码"
+    contact_info_contact_name_tips: "若管理员类型为“法人”，则该姓名需与法人身份证姓名一致；若管理员类型为“经办人”，则可填写实际经办人的姓名。"
+    contact_info_mobile_phone_tips: "11位数字，确保号码正确，用于接收微信支付的重要管理信息及日常操作验证码 。"
+    contact_info_id_doc_period_end_tips: "日期应满足YYYY-MM-DD格式，若证件有效期为长期，请填写：长期。"
+
+    business_authorization_letter_example: "请参照示例图打印业务办理授权函"
+    sales_scene_info_store_url_tips: "可使用微页面制作店铺展示页并获取URL"
     personal_account_bank_list: "对私银行列表查询"
     corporate_account_bank_list: "对公银行列表查询"
   activerecord:
@@ -130,6 +136,13 @@ zh-CN:
         legal_entity: "经营者/法人"
         handler_entity: "经办人"
         contact_name: "超级管理员姓名"
+        contact_id_card_number: "超级管理员证件号码"
+        contact_id_doc_type: "超级管理员证件类型"
+        mobile_phone: "超级管理员手机"
+        contact_email: "超级管理员邮箱"
+        contact_id_doc_period_begin: "超级管理员证件有效期开始时间"
+        contact_id_doc_period_end: "超级管理员证件有效期结束时间"
+        long_term: "长期"
       wechat_vendor_platform_proxy/e_commerce/applyment/account_info:
         bank_account_type: "账户类型"
         corporate_account: "对公账户"
@@ -173,3 +186,4 @@ zh-CN:
         long_term: "长期"
       wechat_vendor_platform_proxy/e_commerce/applyment/sales_scene_info:
         store_name: "店铺名称"
+        store_url: "店铺链接"
