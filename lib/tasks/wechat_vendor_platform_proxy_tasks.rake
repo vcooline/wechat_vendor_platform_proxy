@@ -19,4 +19,18 @@ namespace :wechat_vendor_platform_proxy do
 
     Rails.logger.info "Sync wechat pay platform certficates END."
   end
+
+  desc "Sync wechat pay bank list"
+  task :sync_bank_list, [] => %i[environment set_logger] do |_tasks, _args|
+    Rails.logger.info "Sync wechat pay bank list START."
+
+    WechatVendorPlatformProxy::Vendor.first&.then do |vendor|
+      service = WechatVendorPlatformProxy::V3::BankService.new(vendor)
+      service.sync_corporate_list
+      service.sync_personal_list
+      service.sync_branch_list
+    end
+
+    Rails.logger.info "Sync wechat pay bank list END."
+  end
 end
