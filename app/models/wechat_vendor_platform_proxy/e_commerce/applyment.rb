@@ -63,6 +63,10 @@ module WechatVendorPlatformProxy
       Array(business_addition_pics).to_json
     end
 
+    def masked_bank_account_number
+      account_info&.dig("original_account_number").to_s.gsub(/(?<=\A.{2})(.*)(?=.{2}\z)/, "*")
+    end
+
     private
 
       def set_initial_attrs
