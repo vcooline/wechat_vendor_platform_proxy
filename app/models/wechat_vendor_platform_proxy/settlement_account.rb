@@ -17,5 +17,9 @@ module WechatVendorPlatformProxy
     def applyment
       ecommerce_applyment || sub_applyment
     end
+
+    def masked_account_number
+      account_number.gsub(/(?<=\A.{2})(.*)(?=.{2}\z)/, "*")
+    end
   end
 end
