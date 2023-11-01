@@ -1,21 +1,33 @@
 module WechatVendorPlatformProxy
   module V3
     class SettlementService < ApiBaseService
-      IncorrectBankAccountNumberError = Class.new StandardError
-
-      def get_settlement(sub_mch_id = nil)
-        resp = api_client.get "/v3/apply4sub/sub_merchants/#{sub_mch_id}/settlement"
-        JSON.parse(resp.body)
+      %w[
+        PARAM_ERROR
+        INVALID_REQUEST
+        SIGN_ERROR
+        SYSTEM_ERROR
+        NO_AUTH
+      ].each do |const_name|
+        const_set(const_name.underscore.camelize, Class.new(StandardError))
       end
 
-      def sync_settlement(settlement_account)
-        get_settlement(settlement_account.sub_mch_id).tap do |resp_info|
-          break resp_info if resp_info["code"].present?
-          raise IncorrectBankAccountNumberError unless settlement_account.account_number.end_with?(resp_info["account_number"].last(2))
+      IncorrectBankAccountNumberError = Class.new StandardError
 
-          settlement_account.update \
-            resp_info.slice(*%w[account_typ account_bank bank_name bank_branch_id verify_result verify_fail_reason]).merge({
-              state: (resp_info["verify_result"] == "VERIFY_SUCCESS" ? "success" : nil)
+      def query_settlement(sub_mch_id)
+        resp = api_client.get "/v3/apply4sub/sub_merchants/#{sub_mch_id}/settlement"
+        parse_resp_with_error_handling(resp)
+      end
+
+      def sync_settlement(sub_mch_id)
+        account_info = query_settlement(sub_mch_id)
+
+        SettlementAccount.find_or_initialize_by(sub_mch_id:).tap do |account|
+          account.account_number ||= account.applyment&.account_info&.dig("original_account_number")
+          raise IncorrectBankAccountNumberError unless account.account_number&.end_with?(account_info["account_number"].last(2))
+
+          account.update \
+            account_info.slice(*%w[account_type account_bank bank_name bank_branch_id verify_result verify_fail_reason]).merge({
+              state: (account_info["verify_result"] == "VERIFY_SUCCESS" ? "success" : nil)
             }.compact_blank)
         end
       end
@@ -27,10 +39,9 @@ module WechatVendorPlatformProxy
           extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
 
         if resp.success?
-          settlement_account.submitted!
-          {}
+          settlement_account.tap(&:submitted!)
         else
-          JSON.parse(resp.body)
+          parse_resp_with_error_handling(resp)
         end
       end
 

@@ -11,7 +11,11 @@ module WechatVendorPlatformProxy
       success: 60
     }, default: :ready
 
-    validates :account_type, :account_bank, :bank_address_code, :account_number, presence: true
+    validates :account_type, :account_bank, :account_number, presence: true
     validates :sub_mch_id, presence: true, uniqueness: true
+
+    def applyment
+      ecommerce_applyment || sub_applyment
+    end
   end
 end
