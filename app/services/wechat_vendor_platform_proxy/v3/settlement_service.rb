@@ -3,13 +3,13 @@ module WechatVendorPlatformProxy
     class SettlementService < ApiBaseService
       IncorrectBankAccountNumberError = Class.new StandardError
 
-      def get_settlement(settlement_account)
-        resp = api_client.get "/v3/apply4sub/sub_merchants/#{settlement_account.sub_mch_id}/settlement"
+      def get_settlement(sub_mch_id = nil)
+        resp = api_client.get "/v3/apply4sub/sub_merchants/#{sub_mch_id}/settlement"
         JSON.parse(resp.body)
       end
 
       def sync_settlement(settlement_account)
-        get_settlement(settlement_account).tap do |resp_info|
+        get_settlement(settlement_account.sub_mch_id).tap do |resp_info|
           break resp_info if resp_info["code"].present?
           raise IncorrectBankAccountNumberError unless settlement_account.account_number.end_with?(resp_info["account_number"].last(2))
 
@@ -20,7 +20,7 @@ module WechatVendorPlatformProxy
         end
       end
 
-      def set_settlement(settlement_account)
+      def modify_settlement(settlement_account)
         resp = api_client.post \
           "/v3/apply4sub/sub_merchants/#{settlement_account.sub_mch_id}/modify-settlement",
           build_api_json(settlement_account),

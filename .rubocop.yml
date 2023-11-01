@@ -85,6 +85,9 @@ Metrics/ClassLength:
   Exclude:
     - "test/**/*.rb"
 
+Rails/InverseOf:
+  Enabled: false
+
 Rails/LexicallyScopedActionFilter:
   Exclude:
     - "**/concerns/**/*.rb"

@@ -3,6 +3,7 @@ module WechatVendorPlatformProxy
     belongs_to :ecommerce_applyment, class_name: "WechatVendorPlatformProxy::ECommerce::Applyment", primary_key: :sub_mch_id,
       foreign_key: :sub_mch_id, optional: true
     belongs_to :sub_applyment, primary_key: :sub_mch_id, foreign_key: :sub_mch_id, optional: true
+    belongs_to :vendor, primary_key: :sub_mch_id, foreign_key: :sub_mch_id, optional: true
 
     enum :state, {
       ready: 0,

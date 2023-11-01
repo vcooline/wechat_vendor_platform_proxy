@@ -71,6 +71,9 @@ zh-CN:
         verify_result: "汇款验证结果"
         verify_fail_reason: "汇款验证失败原因"
         state: "账户修改状态"
+      wechat_vendor_platform_proxy/settlement_account/account_type:
+        account_type_business: "对公银行账户"
+        account_type_private: "经营者个人银行卡"
       wechat_vendor_platform_proxy/settlement_account/state:
         ready: "未提交"
         submitted: "已提交"

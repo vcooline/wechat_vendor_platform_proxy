@@ -2,25 +2,27 @@ module WechatVendorPlatformProxy
   class Vendor < ApplicationRecord
     self.inheritance_column = nil
 
+    has_many :api_client_certificates, dependent: :destroy
+    has_many :platform_certificates, dependent: :destroy
+    has_many :profit_sharing_receivers, dependent: nil
+
+    has_one :latest_api_client_certificate, -> { order(effective_at: :desc, id: :desc) },
+      class_name: "WechatVendorPlatformProxy::ApiClientCertificate", dependent: nil
+    has_one :latest_platform_certficate, -> { order(effective_at: :desc, id: :desc) },
+      class_name: "WechatVendorPlatformProxy::PlatformCertificate", dependent: nil
+
+    belongs_to :sp_vendor, class_name: name, foreign_key: :sp_mch_id, primary_key: :mch_id, optional: true
+    belongs_to :ecommerce_applyment, class_name: "WechatVendorPlatformProxy::ECommerce::Applyment", foreign_key: :mch_id, primary_key: :sub_mch_id,
+      optional: true
+    has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id,
+      dependent: nil
+
     enum :type, {
       normal_vendor: 1,
       service_provider: 2,
       sub_vendor: 3,
       ecommerce_vendor: 22
-    }
-
-    has_many :api_client_certificates, dependent: :destroy
-    has_many :platform_certificates, dependent: :destroy
-    has_many :profit_sharing_receivers, dependent: nil
-
-    has_one :latest_api_client_certificate, lambda {
-                                              order(effective_at: :desc, id: :desc)
-                                            }, class_name: "WechatVendorPlatformProxy::ApiClientCertificate"
-    has_one :latest_platform_certficate, -> { order(effective_at: :desc, id: :desc) }, class_name: "WechatVendorPlatformProxy::PlatformCertificate"
-
-    belongs_to :sp_vendor, class_name: name, foreign_key: :sp_mch_id, primary_key: :mch_id, optional: true
-    belongs_to :ecommerce_applyment, class_name: "WechatVendorPlatformProxy::ECommerce::Applyment", foreign_key: :mch_id, primary_key: :sub_mch_id,
-      optional: true
+    }, default: :normal_vendor
 
     validates :mch_id, presence: true, uniqueness: true
     validates :type, presence: true

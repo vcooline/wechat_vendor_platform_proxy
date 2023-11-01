@@ -70,6 +70,9 @@ en:
         verify_result: "Verify result"
         verify_fail_reason: "Verify fail reason"
         state: "State"
+      wechat_vendor_platform_proxy/settlement_account/account_type:
+        account_type_business: "corporate account"
+        account_type_private: "personal account"
       wechat_vendor_platform_proxy/settlement_account/state:
         ready: "Ready"
         submitted: "Submitted"

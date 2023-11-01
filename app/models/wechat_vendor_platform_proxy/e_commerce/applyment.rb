@@ -1,5 +1,15 @@
 module WechatVendorPlatformProxy
   class ECommerce::Applyment < ApplicationRecord
+    BANK_ACCOUNT_TYPE_MAPPING = {
+      corporate_account: 74,
+      personal_account: 75
+    }.freeze
+
+    CONTACT_TYPE_MAPPING = {
+      legal_entity: 65,
+      handler_entity: 66
+    }.freeze
+
     has_one_attached :business_license_copy
     has_one_attached :id_card_copy
     has_one_attached :id_card_national
@@ -10,8 +20,10 @@ module WechatVendorPlatformProxy
     has_many_attached :business_addition_uploads
 
     belongs_to :owner, polymorphic: true
-    has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id
-    has_one :vendor, class_name: "WechatVendorPlatformProxy::Vendor", foreign_key: :mch_id, primary_key: :sub_mch_id
+    has_one :settlement_account, class_name: "WechatVendorPlatformProxy::SettlementAccount", primary_key: :sub_mch_id, foreign_key: :sub_mch_id,
+      dependent: nil
+    has_one :vendor, class_name: "WechatVendorPlatformProxy::Vendor", foreign_key: :mch_id, primary_key: :sub_mch_id,
+      dependent: nil
 
     enum :state, {
       ready: 0,
