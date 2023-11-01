@@ -8,7 +8,7 @@ module WechatVendorPlatformProxy
       end
 
       def platform_encrypt(original_text)
-        OpenSSL::X509::Certificate.new(vendor.latest_platform_certficate.cert)
+        OpenSSL::X509::Certificate.new(vendor.latest_platform_certificate.cert)
           .public_key
           .public_encrypt(original_text, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
           .then { |c| Base64.strict_encode64(c) }

@@ -65,6 +65,7 @@ zh-CN:
       wechat_vendor_platform_proxy/settlement_account:
         account_type: "账户类型"
         account_bank: "开户银行"
+        bank_address_code: "开户银行省市编码"
         bank_name: "开户银行全称（含支行）"
         bank_branch_id: "开户银行联行号"
         account_number: "银行账号"

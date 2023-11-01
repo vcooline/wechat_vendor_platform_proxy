@@ -64,6 +64,7 @@ en:
       wechat_vendor_platform_proxy/settlement_account:
         account_type: "Account type"
         account_bank: "Account bank"
+        bank_address_code: "Bank address division code"
         bank_name: "Bank name"
         bank_branch_id: "Bank branch id"
         account_number: "Account number"

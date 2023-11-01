@@ -8,7 +8,7 @@ module WechatVendorPlatformProxy
 
     has_one :latest_api_client_certificate, -> { order(effective_at: :desc, id: :desc) },
       class_name: "WechatVendorPlatformProxy::ApiClientCertificate", dependent: nil
-    has_one :latest_platform_certficate, -> { order(effective_at: :desc, id: :desc) },
+    has_one :latest_platform_certificate, -> { order(effective_at: :desc, id: :desc) },
       class_name: "WechatVendorPlatformProxy::PlatformCertificate", dependent: nil
 
     belongs_to :sp_vendor, class_name: name, foreign_key: :sp_mch_id, primary_key: :mch_id, optional: true

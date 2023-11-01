@@ -64,7 +64,7 @@ module WechatVendorPlatformProxy
       resp = api_client.post \
         "/v3/ecommerce/applyments/",
         build_api_json(applyment),
-        extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
+        extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certificate&.serial_no }
 
       JSON.parse(resp.body).tap do |resp_info|
         applyment.update(applyment_id: resp_info["applyment_id"], state: :submitted) if resp_info["applyment_id"].present?

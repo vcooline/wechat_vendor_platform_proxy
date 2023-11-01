@@ -36,7 +36,7 @@ module WechatVendorPlatformProxy
         resp = api_client.post \
           "/v3/apply4sub/sub_merchants/#{settlement_account.sub_mch_id}/modify-settlement",
           build_api_json(settlement_account),
-          extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
+          extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certificate&.serial_no }
 
         if resp.success?
           settlement_account.tap(&:submitted!)

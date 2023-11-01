@@ -9,7 +9,7 @@ module WechatVendorPlatformProxy
       class << self
         def verify_authorization_header(headers, payload = nil)
           vendor = detect_vendor_by_platform_serial_no(headers["Wechatpay-Serial"])
-          return if OpenSSL::X509::Certificate.new(vendor.latest_platform_certficate.cert).public_key.verify \
+          return if OpenSSL::X509::Certificate.new(vendor.latest_platform_certificate.cert).public_key.verify \
             "SHA256",
             Base64.strict_decode64(headers["Wechatpay-Signature"]),
             "#{headers['Wechatpay-Timestamp']}\n#{headers['Wechatpay-Nonce']}\n#{payload}\n"

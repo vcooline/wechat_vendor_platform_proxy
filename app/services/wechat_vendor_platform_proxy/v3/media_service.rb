@@ -5,7 +5,7 @@ module WechatVendorPlatformProxy
         resp = post \
           "/v3/merchant/media/upload",
           image,
-          extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certficate&.serial_no }
+          extra_headers: { "Wechatpay-Serial" => vendor.latest_platform_certificate&.serial_no }
         JSON.parse(resp.body)
       end
 
